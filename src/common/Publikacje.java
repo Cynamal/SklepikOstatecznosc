@@ -14,6 +14,9 @@ public class Publikacje {
     public ZakonczenieSymulacjiHandler zakonczenieSymulacjiHandler;
     public RozpoczecieSymulacjiHandler rozpoczecieSymulacjiHandler;
     public ZakonczenieObslugiKlientaHandler zakonczenieObslugiKlientaHandler;
+    public RozpocznijPrzerweHandler rozpocznijPrzerweHandler;
+    public ZakoczeniePrzerwyHandler zakoczeniePrzerwyHandler;
+    public UruchomNowaKaseHandler uruchomNowaKaseHandler;
 
     private void publishKlient(RTIambassador rtiamb) {
         try {
@@ -169,6 +172,69 @@ public class Publikacje {
             restoreInProgress.printStackTrace();
         } catch (ConcurrentAccessAttempted concurrentAccessAttempted) {
             concurrentAccessAttempted.printStackTrace();
+        }
+    }
+
+    private void publishRozpocznijPrzerwe(RTIambassador rtiamb) {
+        try {
+            rozpocznijPrzerweHandler = new RozpocznijPrzerweHandler(rtiamb);
+            rtiamb.publishInteractionClass(rozpocznijPrzerweHandler.getRozpocznijPrzerweHandler());
+        } catch (NameNotFound nameNotFound) {
+            nameNotFound.printStackTrace();
+        } catch (FederateNotExecutionMember federateNotExecutionMember) {
+            federateNotExecutionMember.printStackTrace();
+        } catch (RTIinternalError rtIinternalError) {
+            rtIinternalError.printStackTrace();
+        } catch (RestoreInProgress restoreInProgress) {
+            restoreInProgress.printStackTrace();
+        } catch (ConcurrentAccessAttempted concurrentAccessAttempted) {
+            concurrentAccessAttempted.printStackTrace();
+        } catch (InteractionClassNotDefined interactionClassNotDefined) {
+            interactionClassNotDefined.printStackTrace();
+        } catch (SaveInProgress saveInProgress) {
+            saveInProgress.printStackTrace();
+        }
+    }
+
+    private void publishZakoczeniePrzerwy(RTIambassador rtiamb) {
+        try {
+            zakoczeniePrzerwyHandler = new ZakoczeniePrzerwyHandler(rtiamb);
+            rtiamb.publishInteractionClass(zakoczeniePrzerwyHandler.getZakoczeniePrzerwyHandler());
+        } catch (NameNotFound nameNotFound) {
+            nameNotFound.printStackTrace();
+        } catch (FederateNotExecutionMember federateNotExecutionMember) {
+            federateNotExecutionMember.printStackTrace();
+        } catch (RTIinternalError rtIinternalError) {
+            rtIinternalError.printStackTrace();
+        } catch (RestoreInProgress restoreInProgress) {
+            restoreInProgress.printStackTrace();
+        } catch (ConcurrentAccessAttempted concurrentAccessAttempted) {
+            concurrentAccessAttempted.printStackTrace();
+        } catch (InteractionClassNotDefined interactionClassNotDefined) {
+            interactionClassNotDefined.printStackTrace();
+        } catch (SaveInProgress saveInProgress) {
+            saveInProgress.printStackTrace();
+        }
+    }
+
+    private void publishUruchomNowaKase(RTIambassador rtiamb) {
+        try {
+            uruchomNowaKaseHandler = new UruchomNowaKaseHandler(rtiamb);
+            rtiamb.publishInteractionClass(uruchomNowaKaseHandler.getUruchomNowaKaseHandler());
+        } catch (NameNotFound nameNotFound) {
+            nameNotFound.printStackTrace();
+        } catch (FederateNotExecutionMember federateNotExecutionMember) {
+            federateNotExecutionMember.printStackTrace();
+        } catch (RTIinternalError rtIinternalError) {
+            rtIinternalError.printStackTrace();
+        } catch (RestoreInProgress restoreInProgress) {
+            restoreInProgress.printStackTrace();
+        } catch (ConcurrentAccessAttempted concurrentAccessAttempted) {
+            concurrentAccessAttempted.printStackTrace();
+        } catch (InteractionClassNotDefined interactionClassNotDefined) {
+            interactionClassNotDefined.printStackTrace();
+        } catch (SaveInProgress saveInProgress) {
+            saveInProgress.printStackTrace();
         }
     }
 }
