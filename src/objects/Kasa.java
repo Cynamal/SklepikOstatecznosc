@@ -65,6 +65,19 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
         throw new Exception("Nie znaleziono odpowiedniej kasy ");
     }
 
+    /** Zwraca liste stringow opisujacych wszystkie kasy w liscie
+     * @param list
+     * @return
+     */
+    public static LinkedList<String> ToStringList(LinkedList<Kasa> list)
+    {
+        LinkedList<String> ret= new LinkedList<>();
+        for (Kasa tmp: list
+                ) {
+            ret.add(tmp.toString());
+        }
+        return ret;
+    }
     /**
      * Pobiera tylko klasy aktywne z listy kas
      * @param kasy Lista wszystkich kas w systemie
