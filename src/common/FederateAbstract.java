@@ -35,7 +35,14 @@ public class FederateAbstract  {
 
 
 
+    public void advanceTime(double timestep, AmbasadorAbstract fedamb) throws RTIexception {
+        fedamb.isAdvancing = true;
+        LogicalTime newTime = convertTime(fedamb.federateTime + timestep);
+        rtiamb.timeAdvanceRequest(newTime);
 
+        while (fedamb.isAdvancing)
+            rtiamb.tick();
+    }
 
 
     private LogicalTime convertTime(double time) {

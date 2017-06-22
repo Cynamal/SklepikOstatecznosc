@@ -16,7 +16,7 @@ public class GUIFederate extends FederateAbstract {
     public AmbasadorAbstract fedamb;
     public GUIapp GUI;
     public Lock CheckStartedLock = new ReentrantLock();
-    public boolean Started=false;
+
     public LinkedList<Kasa> kasy = new LinkedList<>();
     private int IteratorKasy = 1;
     public GUIFederate(GUIapp GUI)
@@ -30,7 +30,21 @@ public class GUIFederate extends FederateAbstract {
     }
 
     private void publishAndSubscribe() {
+        //obj
 
+        //interactions
+        fedamb.publikacje.publishRozpoczecieSymulacji(super.rtiamb);
+        fedamb.publikacje.publishZakonczenieSymulacji(super.rtiamb);
+
+        //obj
+        fedamb.subskrypcje.subscribeKasa(super.rtiamb);
+        fedamb.subskrypcje.subscribeKlient(super.rtiamb);
+        // interactions
+        fedamb.subskrypcje.subscribeUruchomNowaKase(super.rtiamb);
+        fedamb.subskrypcje.subscribeRozpocznijPrzerwe(super.rtiamb);
+        fedamb.subskrypcje.subscribeRozpoczecieObslugi(super.rtiamb);
+        fedamb.subskrypcje.subscribeZakonczanieObslugiKlienta(super.rtiamb);
+        fedamb.subskrypcje.subscribeZakoczeniePrzerwy(super.rtiamb);
     }
 
 }
