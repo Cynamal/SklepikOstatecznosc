@@ -19,7 +19,7 @@ public class Subskrypcje {
     public ZakoczeniePrzerwyHandler zakoczeniePrzerwyHandler;
     public UruchomNowaKaseHandler uruchomNowaKaseHandler;
 
-    private void subscribeKasa(RTIambassador rtiamb) {
+    public void subscribeKasa(RTIambassador rtiamb) {
         try {
             kasaHandler = new KasaHandler(rtiamb);
             rtiamb.subscribeObjectClassAttributes(kasaHandler.getKasaHandler(), kasaHandler.getAttributeHandleSet());
@@ -42,7 +42,7 @@ public class Subskrypcje {
         }
     }
 
-    private void subscribeKlient(RTIambassador rtiamb) {
+    public void subscribeKlient(RTIambassador rtiamb) {
         try {
             klientHandler = new KlientHandler(rtiamb);
             rtiamb.subscribeObjectClassAttributes(klientHandler.getKlientHandler(), klientHandler.getAttributeHandleSet());
@@ -65,7 +65,7 @@ public class Subskrypcje {
         }
     }
 
-    private void subscribeZakoczenieSymulacji(RTIambassador rtiamb) {
+    public void subscribeZakoczenieSymulacji(RTIambassador rtiamb) {
         try {
             zakonczenieSymulacjiHandler = new ZakonczenieSymulacjiHandler(rtiamb);
             rtiamb.subscribeInteractionClass(zakonczenieSymulacjiHandler.getZakonczenieSymulacjiHandler());
@@ -88,7 +88,7 @@ public class Subskrypcje {
         }
     }
 
-    private void subscribeRozpoczecieSymulacji(RTIambassador rtiamb) {
+    public void subscribeRozpoczecieSymulacji(RTIambassador rtiamb) {
         try {
             rozpoczecieSymulacjiHandler = new RozpoczecieSymulacjiHandler(rtiamb);
             rtiamb.subscribeInteractionClass(rozpoczecieSymulacjiHandler.getRozpoczecieSymulacjiHandler());
@@ -111,7 +111,7 @@ public class Subskrypcje {
         }
     }
 
-    private void subscribeZakonczanieObslugiKlienta(RTIambassador rtiamb) {
+    public void subscribeZakonczanieObslugiKlienta(RTIambassador rtiamb) {
         try {
             zakonczenieObslugiKlientaHandler = new ZakonczenieObslugiKlientaHandler(rtiamb);
             rtiamb.subscribeInteractionClass(zakonczenieObslugiKlientaHandler.getZakonczenieObslugiKlientaHandler());
@@ -134,7 +134,7 @@ public class Subskrypcje {
         }
     }
 
-    private void subscribeRozpoczecieObslugi(RTIambassador rtiamb) {
+    public void subscribeRozpoczecieObslugi(RTIambassador rtiamb) {
         try {
             rozpoczecieObslugiHandler = new RozpoczecieObslugiHandler(rtiamb);
             rtiamb.subscribeInteractionClass(rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler());
@@ -157,7 +157,7 @@ public class Subskrypcje {
         }
     }
 
-    private void subscribeWejscieDoKolejki(RTIambassador rtiamb) {
+    public void subscribeWejscieDoKolejki(RTIambassador rtiamb) {
         try {
             wejscieDoKolejkiHandler = new WejscieDoKolejkiHandler(rtiamb);
             rtiamb.subscribeInteractionClass(wejscieDoKolejkiHandler.getWejscieDoKolejkiHandler());
@@ -180,7 +180,7 @@ public class Subskrypcje {
         }
     }
 
-    private void subscribeRozpocznijPrzerwe(RTIambassador rtiamb) {
+    public void subscribeRozpocznijPrzerwe(RTIambassador rtiamb) {
         try {
             rozpocznijPrzerweHandler = new RozpocznijPrzerweHandler(rtiamb);
             rtiamb.subscribeInteractionClass(rozpocznijPrzerweHandler.getRozpocznijPrzerweHandler());
@@ -203,7 +203,7 @@ public class Subskrypcje {
         }
     }
 
-    private void subscribeZakoczeniePrzerwy(RTIambassador rtiamb) {
+    public void subscribeZakoczeniePrzerwy(RTIambassador rtiamb) {
         try {
             zakoczeniePrzerwyHandler = new ZakoczeniePrzerwyHandler(rtiamb);
             rtiamb.subscribeInteractionClass(zakoczeniePrzerwyHandler.getZakoczeniePrzerwyHandler());
@@ -226,7 +226,7 @@ public class Subskrypcje {
         }
     }
 
-    private void subscribeUruchomNowaKase(RTIambassador rtiamb) {
+    public void subscribeUruchomNowaKase(RTIambassador rtiamb) {
         try {
             uruchomNowaKaseHandler = new UruchomNowaKaseHandler(rtiamb);
             rtiamb.subscribeInteractionClass(uruchomNowaKaseHandler.getUruchomNowaKaseHandler());
