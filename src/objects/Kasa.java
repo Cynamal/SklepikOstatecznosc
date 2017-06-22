@@ -27,6 +27,44 @@ public class Kasa {
         this.CzyOtwarta=false;
     }
 
+    /** Dodaje klienta lub aktualizuje jesli juz istnieje w liscie kas lub w licie klientow w sklepie
+     * @param klient klient otrzymany z rti
+     * @param list lista kas
+     * @param klienciWSklepie
+     * @return jeli klient zostal dodany to true
+     */
+public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient klient,LinkedList<Kasa> list,ListaKlientow klienciWSklepie)
+{
+    if(klient.NumerKolejki==-1)
+    {
+     return  klienciWSklepie.addorChangeIfExist(klient);
+    }
+    else
+    {
+        try {
+          return  Kasa.addorChangeIfExistClientToListOfKasa(klient,list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    return false;
+}
+    /** Dodaje klienta lub aktualizuje jesli juz istnieje w liscie kas
+     * @param klient klient otrzymany z rti
+     * @param list lista kas
+     * @return jeli klient zostal dodany to true
+     * @throws Exception jeli nie udalo sie znalesc klienta
+     */
+    private static boolean addorChangeIfExistClientToListOfKasa(Klient klient,LinkedList<Kasa> list) throws Exception {
+        int numerKolejki= klient.NumerKolejki;
+        for (Kasa ka:list
+                ) {
+            if(ka.NumerKasy==numerKolejki) return ka.kolejka.addorChangeIfExist(klient);
+        }
+
+        throw new Exception("Nie znaleziono odpowiedniej kasy ");
+    }
+
     /**
      * Pobiera tylko klasy aktywne z listy kas
      * @param kasy Lista wszystkich kas w systemie
@@ -86,5 +124,23 @@ public class Kasa {
 
     }
 
+    /** Dodaje kase lub aktualizuje jesli taka kasa isnieje (uzywac do pobierania danych od rti)
+     * @param kasa Kasa ktora zostala odebrana
+     * @param list lista kas
+     * @return jezeli kasa dodana true jezeli zaktualizowana false
+     */
+    public static boolean addorChangeIfExist(Kasa kasa,LinkedList<Kasa> list)
+    {
+        for(Kasa tmp:list)
+        {
+            if(tmp.NumerKasy==kasa.NumerKasy)
+            {
+                tmp=kasa;
+                return false;
+            }
+        }
+        list.add(kasa);
+        return true;
+    }
 
 }
