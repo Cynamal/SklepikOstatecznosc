@@ -5,7 +5,9 @@ import hla.rti.jlc.RtiFactoryFactory;
 import org.portico.impl.hla13.types.DoubleTime;
 import org.portico.impl.hla13.types.DoubleTimeInterval;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 
 /**
@@ -30,7 +32,8 @@ public class FederateAbstract  {
         System.out.println(x);
         logS+=x+"/n";
     }
-
+    Publikacje publikacje;
+    Subskrypcje subskrypcje;
 
 
 
@@ -42,7 +45,7 @@ public class FederateAbstract  {
     protected LogicalTimeInterval convertInterval(double time) {
         return new DoubleTimeInterval(time);
     }
-    protected void ustawianiePolitykiCzasowej(FederateAbstract fedamb) {
+    protected void ustawianiePolitykiCzasowej(AmbasadorAbstract fedamb) {
         LogicalTime currentTime = convertTime(fedamb.federateTime);
         LogicalTimeInterval lookahead = convertInterval(fedamb.federateLookahead);
 
@@ -62,6 +65,111 @@ public class FederateAbstract  {
             }
         } catch (TimeConstrainedAlreadyEnabled | EnableTimeConstrainedPending | FederateNotExecutionMember | TimeAdvanceAlreadyInProgress | RestoreInProgress | SaveInProgress | ConcurrentAccessAttempted | RTIinternalError timeConstrainedAlreadyEnabled) {
             timeConstrainedAlreadyEnabled.printStackTrace();
+        }
+    }
+
+    /**
+     * Czesc wspolna dla uruchamiania federata
+     */
+    public void CommonrunFederate(String federateName,AmbasadorAbstract fedamb)
+    {
+        tworzenieAmbasadoraOrazTworzenieFederata();
+        dolaczenieDoFederacji(federateName,fedamb);
+        ogloszeniePunktuSynchronizacji(fedamb);
+        czekajAzWszyscySieUruchomia();
+        osiagnieciePunktuSynchronizacji(fedamb);
+        ustawianiePolitykiCzasowej(fedamb);
+    }
+    private void dolaczenieDoFederacji(String federateName,AmbasadorAbstract fedamb){
+        try {
+            rtiamb.joinFederationExecution(federateName, NAZWA_FEDERACJI,fedamb);
+
+        } catch (FederateAlreadyExecutionMember | FederationExecutionDoesNotExist | SaveInProgress | RTIinternalError | RestoreInProgress | ConcurrentAccessAttempted federateAlreadyExecutionMember) {
+            federateAlreadyExecutionMember.printStackTrace();
+        }
+        log("Dołączył do federacji jako: " + federateName);
+    }
+    protected void czekajAzWszyscySieUruchomia() {
+        log(" >>>>>>>>>> Press Enter to Continue <<<<<<<<<<");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            reader.readLine();
+        } catch (Exception e) {
+            log("Error while waiting for user input: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void osiagnieciePunktuSynchronizacji(AmbasadorAbstract fedamb) {
+        try {
+            rtiamb.synchronizationPointAchieved(READY_TO_RUN);
+        } catch (SynchronizationLabelNotAnnounced | ConcurrentAccessAttempted | RTIinternalError | RestoreInProgress | SaveInProgress | FederateNotExecutionMember synchronizationLabelNotAnnounced) {
+            synchronizationLabelNotAnnounced.printStackTrace();
+        }
+        log("Osiągnięto punkt synchronizacji: " + READY_TO_RUN + ", czekanie na federacje...");
+        while (!fedamb.isReadyToRun) {
+            try {
+                rtiamb.tick();
+            } catch (RTIinternalError | ConcurrentAccessAttempted rtIinternalError) {
+                rtIinternalError.printStackTrace();
+            }
+        }
+    }
+    protected void czekajAzWszyscySieSynchonizuja() {
+        log(" >>>>>>>>>> Press Enter to Continue <<<<<<<<<<");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            reader.readLine();
+        } catch (Exception e) {
+            log("Error while waiting for user input: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void osiagnieciePunktuSynchronizacjiWyjscia(AmbasadorAbstract fedamb) {
+        try {
+            rtiamb.synchronizationPointAchieved(READY_TO_STOP);
+        } catch (SynchronizationLabelNotAnnounced | ConcurrentAccessAttempted | RTIinternalError | RestoreInProgress | SaveInProgress | FederateNotExecutionMember synchronizationLabelNotAnnounced) {
+            synchronizationLabelNotAnnounced.printStackTrace();
+        }
+        log("Osiągnięto punkt synchronizacji: " + READY_TO_STOP + ", czekanie na federacje...");
+        while (!fedamb.isReadyToRun) {
+            try {
+                rtiamb.tick();
+            } catch (RTIinternalError | ConcurrentAccessAttempted rtIinternalError) {
+                rtIinternalError.printStackTrace();
+            }
+        }
+    }
+
+    private void ogloszeniePunktuSynchronizacjiWyjscia(AmbasadorAbstract fedamb) {
+        try {
+            rtiamb.registerFederationSynchronizationPoint(READY_TO_STOP, null);
+        } catch (FederateNotExecutionMember | SaveInProgress | RTIinternalError | RestoreInProgress | ConcurrentAccessAttempted federateNotExecutionMember) {
+            federateNotExecutionMember.printStackTrace();
+        }
+
+        while (!fedamb.isAnnounced) {
+            try {
+                rtiamb.tick();
+            } catch (RTIinternalError | ConcurrentAccessAttempted rtIinternalError) {
+                rtIinternalError.printStackTrace();
+            }
+        }
+    }
+    private void ogloszeniePunktuSynchronizacji(AmbasadorAbstract fedamb) {
+        try {
+            rtiamb.registerFederationSynchronizationPoint(READY_TO_RUN, null);
+        } catch (FederateNotExecutionMember | SaveInProgress | RTIinternalError | RestoreInProgress | ConcurrentAccessAttempted federateNotExecutionMember) {
+            federateNotExecutionMember.printStackTrace();
+        }
+
+        while (!fedamb.isAnnounced) {
+            try {
+                rtiamb.tick();
+            } catch (RTIinternalError | ConcurrentAccessAttempted rtIinternalError) {
+                rtIinternalError.printStackTrace();
+            }
         }
     }
     protected void tworzenieAmbasadoraOrazTworzenieFederata() {
