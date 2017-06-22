@@ -11,7 +11,8 @@ import org.portico.impl.hla13.types.DoubleTime;
 public class AmbasadorAbstract extends NullFederateAmbassador {
     public static final String federationName = "FederacjaSklepowa";
     public static final String READY_TO_RUN = "ReadyToRun";
-
+    public Publikacje publikacje;
+    public Subskrypcje subskrypcje;
     public double federateLookahead = 1.0;
     public double federateTime = 0.0;
 

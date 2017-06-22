@@ -32,8 +32,7 @@ public class FederateAbstract  {
         System.out.println(x);
         logS+=x+"/n";
     }
-    Publikacje publikacje;
-    Subskrypcje subskrypcje;
+
 
 
 
