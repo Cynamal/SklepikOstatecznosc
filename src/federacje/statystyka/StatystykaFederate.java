@@ -1,5 +1,6 @@
 package federacje.statystyka;
 
+import Interactions.RozpoczecieObslugi;
 import common.AmbasadorAbstract;
 import common.ExternalEventAbstract;
 import common.FederateAbstract;
@@ -7,9 +8,7 @@ import federacje.kasa.KasaFederate;
 import hla.rti.RTIexception;
 import statistic.Colections.*;
 
-import statistic.Obj.EvZakonczenieObslugiKlienta;
-import statistic.Obj.UpdateKasa;
-import statistic.Obj.ZadanieUruchomieniaKasy;
+import statistic.Obj.*;
 
 import java.util.Collections;
 
@@ -21,6 +20,11 @@ public class StatystykaFederate extends FederateAbstract {
     ZadaniaUruchomieniaKasy zadaniaUruchomieniaKasy=new ZadaniaUruchomieniaKasy();
     ZakonczeniaObslugiKliena zakonczeniaObslugiKliena=new ZakonczeniaObslugiKliena();
     UpdateKasaList updateKasaList=new UpdateKasaList();
+    UpdateKlientList updateKlientList=new UpdateKlientList();
+    ZakoczeniaPrzerwy zakoczeniaPrzerwy=new ZakoczeniaPrzerwy();
+    WejsciaDoKolejki wejsciaDoKolejki=new WejsciaDoKolejki();
+    RozpoczeciaPrzerwy rozpoczeciaPrzerwy=new RozpoczeciaPrzerwy();
+    RozpoczeciaOblugi rozpoczeciaOblugi=new RozpoczeciaOblugi();
     //--------------------
     public static final String federateName = "StatystykaFederate";
     public AmbasadorAbstract fedamb;
@@ -35,12 +39,11 @@ public class StatystykaFederate extends FederateAbstract {
                 Collections.sort(fedamb.externalEvents, new ExternalEventAbstract.ExternalEventComparator());
                 for (ExternalEventAbstract event : fedamb.externalEvents) {
                     try {
-
-
                         // System.out.println("w for");
                         switch (event.getEventType()) {
                             case Klient:
                                 log("Dodano klienta: " + event.getKlient());
+                                updateKlientList.add(new UpdateKlient(event.getTime(), event.getKlient()));
                                 break;
                             case Kasa:
                                 log("Dodano kase: " + event.getKasa());
@@ -53,14 +56,32 @@ public class StatystykaFederate extends FederateAbstract {
                             case UruchomNowaKase:
                                 log("Odebrano zadanie uruchomienia kasy");
                                 zadaniaUruchomieniaKasy.add(new ZadanieUruchomieniaKasy(event.getTime()));
-
                                 break;
-                        }
-                    } catch (Exception e) {
-
-                    }
+                            case ZakoczeniePrzerwy:
+                                log("Zakoczenie przerwy: "+event.getZakoczeniePrzerwy());
+                                zakoczeniaPrzerwy.add(new EvZakoczeniePrzerwy(event.getTime(), event.getZakoczeniePrzerwy()));
+                                break;
+                            case WejscieDoKolejki:
+                                log("Wejscie do kolejki klienta: " + event.getWejscieDoKolejki());
+                                wejsciaDoKolejki.add(new EvWejscieDoKolejki(event.getTime(), event.getWejscieDoKolejki()));
+                                break;
+                            case RozpocznijPrzerwe:
+                                log("Rozpocznij przerwe: "+event.getRozpocznijPrzerwe());
+                                rozpoczeciaPrzerwy.add(new EvRozpocznijPrzerwe(event.getTime(), event.getRozpocznijPrzerwe()));
+                                break;
+                            case RozpoczecieObslugi:
+                                log("Rozpoczecie obslugi: "+event.getRozpoczecieObslugi());
+                                rozpoczeciaOblugi.add(new EvRozpoczecieObslugi(event.getTime(), event.getRozpoczecieObslugi()));
+                                break;
+                            case ZakoczenieSymulacji:
+                                log("Odebrano zakonczenie symulacji");
+                                break;
+                            case RozpoczecieSymulacji:
+                                log("Odebrano rozpoczecie symulacji");
+                                break;
+                        }} catch (Exception e) {}
                 }
-
+                fedamb.externalEvents.clear();
             }
             try {
                 advanceTime(1.0,fedamb);
