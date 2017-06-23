@@ -1,6 +1,6 @@
 package common;
 
-import Interactions.ZakonczanieObslugiKlienta;
+import Interactions.*;
 import hla.rti.*;
 import hla.rti.jlc.EncodingHelpers;
 import hla.rti.jlc.NullFederateAmbassador;
@@ -113,9 +113,56 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
         if (theTime != null)
             builder.append(", time=" + convertTime(theTime));
 
+        try {
+            if(interactionClass ==subskrypcje.zakoczeniePrzerwyHandler.getZakoczeniePrzerwyHandler()) {
+                int CzasPrzerwy = EncodingHelpers.decodeInt(theInteraction.getValue(0));
+                int NumerKasy = EncodingHelpers.decodeInt(theInteraction.getValue(1));
+                double time = convertTime(theTime);
+                externalEvent.ZakoczeniePrzerwyEvent(new ZakoczeniePrzerwy(CzasPrzerwy,NumerKasy),time);
 
-        try
-        {
+                builder.append("Odebrano interakcje zakonczenia przerwy\n");
+
+                this.externalEvents.add(externalEvent);
+            }} catch (Exception e){}
+
+        try {
+            if(interactionClass ==subskrypcje.rozpocznijPrzerweHandler.getRozpocznijPrzerweHandler()) {
+                int NumerKasy = EncodingHelpers.decodeInt(theInteraction.getValue(0));
+                double time = convertTime(theTime);
+                externalEvent.RozpocznijPrzerweEvent(new RozpocznijPrzerwe(NumerKasy),time);
+
+                builder.append("Odebrano interakcje rozpoczecia przerwy\n");
+
+                this.externalEvents.add(externalEvent);
+            }} catch (Exception e){}
+
+        try {
+            if(interactionClass ==subskrypcje.wejscieDoKolejkiHandler.getWejscieDoKolejkiHandler()) {
+                int CzasZakupow = EncodingHelpers.decodeInt(theInteraction.getValue(0));
+                int NumerKasy = EncodingHelpers.decodeInt(theInteraction.getValue(1));
+                int IDKlienta = EncodingHelpers.decodeInt(theInteraction.getValue(2));
+                double time = convertTime(theTime);
+                externalEvent.WejscieDoKolejkiEvent(new WejscieDoKolejki(CzasZakupow,NumerKasy,IDKlienta),time);
+
+                builder.append("Odebrano interakcje wejscia do kolejki\n");
+
+                this.externalEvents.add(externalEvent);
+            }} catch (Exception e){}
+
+        try {
+            if(interactionClass ==subskrypcje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler()) {
+                int NumerKasy = EncodingHelpers.decodeInt(theInteraction.getValue(0));
+                int CzasOczekiwania = EncodingHelpers.decodeInt(theInteraction.getValue(1));
+                int IDKlienta = EncodingHelpers.decodeInt(theInteraction.getValue(2));
+                double time = convertTime(theTime);
+                externalEvent.RozpoczecieObslugiEvent(new RozpoczecieObslugi(CzasOczekiwania,NumerKasy,IDKlienta),time);
+
+                builder.append("Odebrano interakcje rozpoczecia obslugi klienta\n");
+
+                this.externalEvents.add(externalEvent);
+            }} catch (Exception e){}
+
+        try {
             if(interactionClass ==subskrypcje.zakonczenieObslugiKlientaHandler.getZakonczenieObslugiKlientaHandler()) {
                 int IDKlienta = EncodingHelpers.decodeInt(theInteraction.getValue(0));
                 int CZasObslugi = EncodingHelpers.decodeInt(theInteraction.getValue(1));
@@ -125,52 +172,33 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
                 builder.append("Odebrano interakcje zakonczenia obslugi klienta\n");
 
                 this.externalEvents.add(externalEvent);
-            }
-        } catch (Exception e)
-        {
+            }} catch (Exception e) {}
 
-        }
-
-        try
-        {
+        try {
         if(interactionClass ==subskrypcje.rozpoczecieSymulacjiHandler.getRozpoczecieSymulacjiHandler()) {
 
             builder.append("Start Symulacji z gui\n");
             double time = convertTime(theTime);
             externalEvent.RozpoczecieSymulacji(time);
             this.externalEvents.add(externalEvent);
+        }} catch (Exception e) {}
 
-        }
-        } catch (Exception e)
-        {
-
-        }
-        try
-        {
+        try {
         if(interactionClass ==subskrypcje.zakonczenieSymulacjiHandler.getZakonczenieSymulacjiHandler()) {
 
             builder.append("Zakonczenie symulacji z gui\n");
             double time = convertTime(theTime);
             externalEvent.ZakoczenieSymulacji(time);
             this.externalEvents.add(externalEvent);
-        }
-        } catch (Exception e)
-        {
-
-        }
-        try
-        {
+        }} catch (Exception e) {}
+        try {
             if(interactionClass ==subskrypcje.uruchomNowaKaseHandler.getUruchomNowaKaseHandler()) {
 
                 builder.append("Zadanie uruchomienia nowej kasy\n");
                 double time = convertTime(theTime);
                 externalEvent.UruchomNowaKase(time);
                 this.externalEvents.add(externalEvent);
-            }
-        } catch (Exception e)
-        {
-
-        }
+            }} catch (Exception e) {}
         log(builder.toString());
         //#TODO
     }
