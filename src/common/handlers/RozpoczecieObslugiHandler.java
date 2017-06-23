@@ -1,22 +1,19 @@
 package common.handlers;
 
-import hla.rti.FederateNotExecutionMember;
-import hla.rti.NameNotFound;
-import hla.rti.RTIambassador;
-import hla.rti.RTIinternalError;
+import hla.rti.*;
 
 /**
  * Created by Karolina on 22.06.2017.
  */
 public class RozpoczecieObslugiHandler {
     public int RozpoczecieObslugiHandler;
-    public int IDKlientaHandler;
-    public int CzasObslugiHandler;
+    public int NumerKasyHandler;
+    public int CzasOczekiwaniaHandler;
 
-    public RozpoczecieObslugiHandler(RTIambassador rtiamb) throws NameNotFound, FederateNotExecutionMember, RTIinternalError {
+    public RozpoczecieObslugiHandler(RTIambassador rtiamb) throws NameNotFound, FederateNotExecutionMember, RTIinternalError, InteractionClassNotDefined {
         RozpoczecieObslugiHandler = rtiamb.getInteractionClassHandle("HLAinteractionRoot.RozpoczecieObslugi");
-         //   IDKlientaHandler 			= rtiamb.getParameterHandle("IDKlienta", ZakonczanieObslugiKlientaHandle );
-        //     CzasObslugiHandler 			= rtiamb.getParameterHandle("CzasObslugi", ZakonczanieObslugiKlientaHandle );
+        NumerKasyHandler = rtiamb.getParameterHandle("NumerKasy", RozpoczecieObslugiHandler );
+        CzasOczekiwaniaHandler = rtiamb.getParameterHandle("CzasOczekiwania", RozpoczecieObslugiHandler );
     }
 
     public int getRozpoczecieObslugiHandler(){

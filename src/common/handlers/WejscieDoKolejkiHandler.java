@@ -1,9 +1,6 @@
 package common.handlers;
 
-import hla.rti.FederateNotExecutionMember;
-import hla.rti.NameNotFound;
-import hla.rti.RTIambassador;
-import hla.rti.RTIinternalError;
+import hla.rti.*;
 
 /**
  * Created by Karolina on 22.06.2017.
@@ -11,13 +8,13 @@ import hla.rti.RTIinternalError;
 public class WejscieDoKolejkiHandler {
 
     public int WejscieDoKolejkiHandler;
-    public int IDKlientaHandler;
-    public int CzasObslugiHandler;
+    public int CzasZakupowHandler;
+    public int NumerKasyHandler;
 
-    public WejscieDoKolejkiHandler(RTIambassador rtiamb) throws NameNotFound, FederateNotExecutionMember, RTIinternalError {
+    public WejscieDoKolejkiHandler(RTIambassador rtiamb) throws NameNotFound, FederateNotExecutionMember, RTIinternalError, InteractionClassNotDefined {
         WejscieDoKolejkiHandler = rtiamb.getInteractionClassHandle("HLAinteractionRoot.WejscieDoKolejki");
-        //    IDKlientaHandler 			= rtiamb.getParameterHandle("IDKlienta", ZakonczanieObslugiKlientaHandle );
-        //     CzasObslugiHandler			= rtiamb.getParameterHandle("CzasObslugi", ZakonczanieObslugiKlientaHandle );
+        CzasZakupowHandler = rtiamb.getParameterHandle("CzasZakupow", WejscieDoKolejkiHandler);
+        NumerKasyHandler = rtiamb.getParameterHandle("NumerKasy", WejscieDoKolejkiHandler);
     }
 
     public int getWejscieDoKolejkiHandler(){
