@@ -3,7 +3,8 @@ package federacje.GUI;
 import common.AmbasadorAbstract;
 import common.ExternalEventAbstract;
 import common.FederateAbstract;
-import hla.rti.RTIexception;
+import hla.rti.*;
+import hla.rti.jlc.RtiFactoryFactory;
 import objects.Kasa;
 import objects.Klient;
 
@@ -31,37 +32,66 @@ public class GUIFederate extends FederateAbstract {
         fedamb = new AmbasadorAbstract();
         CommonrunFederate(federateName,fedamb);
         publishAndSubscribe();
+        CheckStartedLock.lock();
+        boolean StartedForThread=fedamb.Started;
+        CheckStartedLock.unlock();
+        System.out.println("Czekanie na rozpoczecie symulacji");
+        while(!StartedForThread)
+        {
+
+
+
+            CheckStartedLock.lock();
+            StartedForThread=fedamb.Started;
+            CheckStartedLock.unlock();
+        }
+
         try {
-            advanceTime(1.0,fedamb);
-        } catch (RTIexception rtIexception) {
+
+            wyslijZadanieRozpoczeciaSymulacji(1.0);
+            System.out.println("Wystartowano");
+        } catch (Exception rtIexception) {
             rtIexception.printStackTrace();
         }
-        if (fedamb.externalEvents.size() > 0) {
-            Collections.sort(fedamb.externalEvents, new ExternalEventAbstract.ExternalEventComparator());
-            for (ExternalEventAbstract event : fedamb.externalEvents) {
-                try {
 
 
-                    // System.out.println("w for");
-                    switch (event.getEventType()) {
-                        case Klient:
+
+
+        while(this.isRunning) {
+            if (fedamb.externalEvents.size() > 0) {
+                Collections.sort(fedamb.externalEvents, new ExternalEventAbstract.ExternalEventComparator());
+                for (ExternalEventAbstract event : fedamb.externalEvents) {
+                    try {
+
+
+                        // System.out.println("w for");
+                        switch (event.getEventType()) {
+                            case Klient:
                                 System.out.println("Dodano klienta: " + event.getKlient());
-                            break;
-                        case Kasa:
-                            System.out.println("Dodano kase: " + event.getKasa());
-                            break;
-                        case ZakonczanieObslugiKlienta:
-                            System.out.println("Zakonczenie obslugi klienta: " + event.getZakonczanieObslugiKlienta());
-                            break;
+                                break;
+                            case Kasa:
+                                System.out.println("Dodano kase: " + event.getKasa());
+                                break;
+                            case ZakonczanieObslugiKlienta:
+                                System.out.println("Zakonczenie obslugi klienta: " + event.getZakonczanieObslugiKlienta());
+                                break;
+                        }
+                    } catch (Exception e) {
+
                     }
-                } catch (Exception e) {
-
                 }
-            }
 
+            }
         }
     }
+    private void wyslijZadanieRozpoczeciaSymulacji(double timeStep) throws Exception{
+        SuppliedParameters parameters =
+                RtiFactoryFactory.getRtiFactory().createSuppliedParameters();
+        LogicalTime time = convertTime( timeStep );
+        rtiamb.sendInteraction(fedamb.publikacje.rozpoczecieSymulacjiHandler.getRozpoczecieSymulacjiHandler(), parameters, "tag".getBytes(), time );
 
+
+    }
     private void publishAndSubscribe() {
         //obj
 
