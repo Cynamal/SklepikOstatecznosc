@@ -2,6 +2,9 @@ package common;
 
 import hla.rti.*;
 import hla.rti.jlc.RtiFactoryFactory;
+import objects.Kasa;
+import objects.Klient;
+import objects.ListaKlientow;
 import org.portico.impl.hla13.types.DoubleTime;
 import org.portico.impl.hla13.types.DoubleTimeInterval;
 
@@ -9,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.util.LinkedList;
 
 /**
  * Created by Marcin on 22.06.2017.
@@ -28,6 +32,8 @@ public class FederateAbstract  {
     public boolean isConstrained = false;
     public boolean isAdvancing = false;
     public boolean isRunning=true;
+    public LinkedList<Kasa> kasy= new LinkedList<>();
+    public ListaKlientow kliencjiWSklepie=new ListaKlientow(Integer.MAX_VALUE);
     protected static void log(String x) {
         System.out.println(x);
         logS+=x+"/n";

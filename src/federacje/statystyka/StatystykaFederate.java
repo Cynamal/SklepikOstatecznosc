@@ -1,8 +1,12 @@
 package federacje.statystyka;
 
 import common.AmbasadorAbstract;
+import common.ExternalEventAbstract;
 import common.FederateAbstract;
 import federacje.kasa.KasaFederate;
+import hla.rti.RTIexception;
+
+import java.util.Collections;
 
 /**
  * Created by Marcin on 22.06.2017.
@@ -16,9 +20,39 @@ public class StatystykaFederate extends FederateAbstract {
         CommonrunFederate(federateName,fedamb);
         publishAndSubscribe();
         czekajNAGUI(fedamb);
-        while(this.isRunning)
-        {
+        while(this.isRunning) {
+            if (fedamb.externalEvents.size() > 0) {
+                Collections.sort(fedamb.externalEvents, new ExternalEventAbstract.ExternalEventComparator());
+                for (ExternalEventAbstract event : fedamb.externalEvents) {
+                    try {
 
+
+                        // System.out.println("w for");
+                        switch (event.getEventType()) {
+                            case Klient:
+                                log("Dodano klienta: " + event.getKlient());
+                                break;
+                            case Kasa:
+                                log("Dodano kase: " + event.getKasa());
+                                break;
+                            case ZakonczanieObslugiKlienta:
+                                log("Zakonczenie obslugi klienta: " + event.getZakonczanieObslugiKlienta());
+                                break;
+                            case UruchomNowaKase:
+                                log("Odebrano zadanie uruchomienia kasy");
+                                break;
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+
+            }
+            try {
+                advanceTime(1.0,fedamb);
+            } catch (RTIexception rtIexception) {
+                rtIexception.printStackTrace();
+            }
         }
     }
     public static void main(String[] args) {
