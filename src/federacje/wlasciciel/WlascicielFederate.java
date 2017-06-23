@@ -74,16 +74,20 @@ public class WlascicielFederate extends FederateAbstract {
     }
     private void OtworzKaseJezeliKonieczne()
     {
-       LinkedList<Kasa> kasyAktywne= Kasa.getActiveOnly(kasy);
-       if(kasyAktywne.size()==0)
-       {
-           System.out.println("Nie znaleziono aktywnych kas. Wysylanie zadania dodania nowej");
-           try {
-               WyslijZadanieUruchomieniaKasy(1.0);
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
-       }
+        if(fedamb.federateTime>5)
+        {
+            LinkedList<Kasa> kasyAktywne= Kasa.getActiveOnly(kasy);
+            if(kasyAktywne.size()==0)
+            {
+                System.out.println("Nie znaleziono aktywnych kas. Wysylanie zadania dodania nowej");
+                try {
+                    WyslijZadanieUruchomieniaKasy(1.0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
     private void WyslijZadanieUruchomieniaKasy(double timeStep) throws Exception
     {

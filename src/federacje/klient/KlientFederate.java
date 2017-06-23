@@ -15,6 +15,7 @@ import objects.Klient;
 import objects.ListaKlientow;
 
 import java.util.Collections;
+import java.util.LinkedList;
 
 /**
  * Created by Marcin on 22.06.2017.
@@ -70,7 +71,8 @@ public class KlientFederate extends FederateAbstract {
              ) {
             if(kl.czasZakonczeniaZakupow==fedamb.federateTime)
             {
-                int nr= Kasa.FindBestQiue(kl.uprzywilejowany,kasy);
+               LinkedList<Kasa>aktywne= Kasa.getActiveOnly(kasy);
+                int nr= Kasa.FindBestQiue(kl.uprzywilejowany,aktywne);
                 if(nr==-1)
                 {
                     kl.czasZakonczeniaZakupow+=3;
@@ -80,14 +82,14 @@ public class KlientFederate extends FederateAbstract {
                     log("jezdem");
                     DoWywalenia.add(kl);
 
-                    int miejsce=kasy.get(nr).kolejka.GetplaceWithPropity(kl.uprzywilejowany);
+                    int miejsce=aktywne.get(nr).kolejka.GetplaceWithPropity(kl.uprzywilejowany);
                     kl.NumerWKolejce=miejsce;
-                    kl.NumerKolejki=nr;
-                    kasy.get(nr).kolejka.add(kl);
+                    kl.NumerKolejki=aktywne.get(nr).NumerKasy;
+                    aktywne.get(nr).kolejka.add(kl);
                     try {
                         UpdateKlienttoRTI(kl.hendler,kl);
                        int czs= (int) Math.round( kl.czasZakonczeniaZakupow-kl.czasRozpoczeciaZakupow);
-                        wyslijInterakcjeWejsciaDoKolejki(new WejscieDoKolejki(czs,nr,kl.IDKlienta));
+                        wyslijInterakcjeWejsciaDoKolejki(new WejscieDoKolejki(czs,aktywne.get(nr).NumerKasy,kl.IDKlienta));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -19,7 +19,7 @@ import java.util.Collections;
  * Created by Marcin on 22.06.2017.
  */
 public class KasaFederate extends FederateAbstract {
-    public int PoczatkowaLiczbaKas=10;
+    public int PoczatkowaLiczbaKas=4;
     public static final String federateName = "KasaFederate";
     public AmbasadorAbstract fedamb;
 
@@ -28,7 +28,7 @@ public class KasaFederate extends FederateAbstract {
         CommonrunFederate(federateName,fedamb);
         publishAndSubscribe();
         czekajNAGUI(fedamb);
-        for(int i=0;i<PoczatkowaLiczbaKas;i++)
+        for(int i=1;i<=PoczatkowaLiczbaKas;i++)
         {
             try {
             UruchomNowaKase();
@@ -67,7 +67,7 @@ public class KasaFederate extends FederateAbstract {
                                 Kasa prawislowa= Kasa.FindbyID(kasy,kolejk.NumerKasy);
                                 prawislowa.Dlugosc++;
                                 if(prawislowa.Dlugosc==prawislowa.kolejka.WielkoscMax)
-                                    prawislowa.CzyOtwarta=false;
+                                    prawislowa.CzyPelna=true;
                                 sendKasaToRTI(prawislowa.hendKasa,prawislowa);
                                 log("Klient:" +kolejk.IDKlienta+" wszedl do kasy "+kolejk.NumerKasy);
                                 break;
@@ -103,7 +103,7 @@ public class KasaFederate extends FederateAbstract {
         return rtiamb.registerObjectInstance(fedamb.publikacje.kasaHandler.getKasaHandler(), "Kasa" + IteratorKasy);
 
     }
-    private int IteratorKasy = 1;
+    private int IteratorKasy = 0;
     private void UruchomNowaKase() throws RTIexception {
         int hendKasa=registerKasa();
         Kasa tmp = new Kasa(IteratorKasy++, 0, false, true,hendKasa);

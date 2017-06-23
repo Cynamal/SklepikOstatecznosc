@@ -132,8 +132,9 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
         LinkedList<Kasa> ret=new LinkedList<>();
         for (Kasa tmp: kasy
                 ) {
-            if(!tmp.CzyPelna||MaxSizeofQiue<=tmp.kolejka.size())
+            if(!tmp.CzyPelna&&MaxSizeofQiue>tmp.kolejka.size()&&MaxSizeofQiue>tmp.Dlugosc&&tmp.CzyOtwarta)
             {
+              //  System.out.println("max"+MaxSizeofQiue+"czypelne"+tmp.CzyPelna+"NumerKasy:"+tmp.NumerKasy+"W kolejce:"+tmp.kolejka.size()+" RTI size:"+tmp.Dlugosc);
                 ret.add(tmp);
             }
         }
@@ -152,25 +153,27 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
         {
             int best=kasy.getFirst().kolejka.size();
             int KasaIndex=-1;
-            int ret=0;
+            int ret=-1;
             for(KasaIndex=0;kasy.size()>KasaIndex;KasaIndex++)
-            {
-                if (best>kasy.get(KasaIndex).kolejka.size())
+            {System.out.println("tu"+kasy.size()+"best "+best+"asda "+kasy.get(KasaIndex).kolejka.size()+"index"+KasaIndex);
+                if (best>=kasy.get(KasaIndex).kolejka.size())
                 {
+                   // System.out.println("jest"+kasy.size());
                     best=kasy.get(KasaIndex).kolejka.size();
                     ret=KasaIndex;
                 }
             }
+           // System.out.println("przedret"+kasy.size());
             return ret;
         }
         else
         {
             int best=kasy.getFirst().kolejka.size();
             int KasaIndex=-1;
-            int ret=0;
+            int ret=-1;
             for(KasaIndex=0;kasy.size()>KasaIndex;KasaIndex++)
             {
-                if (best>kasy.get(KasaIndex).kolejka.size())
+                if (best>=kasy.get(KasaIndex).kolejka.size())
                 {
                     best=kasy.get(KasaIndex).kolejka.size();
                     ret=KasaIndex;
@@ -192,7 +195,11 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
         {
             if(tmp.NumerKasy==kasa.NumerKasy)
             {
-                tmp=kasa;
+                tmp.CzyOtwarta=kasa.CzyOtwarta;
+               // tmp.kolejka=kasa.kolejka;
+                tmp.Dlugosc=kasa.Dlugosc;
+                tmp.CzyPelna=kasa.CzyPelna;
+                //tmp=kasa;
                 return false;
             }
         }
