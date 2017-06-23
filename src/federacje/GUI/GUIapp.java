@@ -129,8 +129,8 @@ public class GUIapp extends Application {
 
                                 }
 
-                                oldItems= FXCollections.observableArrayList(Kasa.ToStringList(federate.kasy));
-                                IPLIst.setItems(oldItems);
+
+                                IPLIst.setItems(FXCollections.observableArrayList(Kasa.ToStringList(federate.kasy)));
                             }
 
 

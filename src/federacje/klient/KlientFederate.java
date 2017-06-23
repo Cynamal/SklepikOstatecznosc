@@ -77,6 +77,7 @@ public class KlientFederate extends FederateAbstract {
                 }
                 else
                 {
+                    log("jezdem");
                     DoWywalenia.add(kl);
 
                     int miejsce=kasy.get(nr).kolejka.GetplaceWithPropity(kl.uprzywilejowany);

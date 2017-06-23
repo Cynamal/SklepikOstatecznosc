@@ -161,6 +161,7 @@ public class GUIFederate extends FederateAbstract {
         fedamb.subskrypcje.subscribeRozpoczecieObslugi(super.rtiamb);
         fedamb.subskrypcje.subscribeZakonczanieObslugiKlienta(super.rtiamb);
         fedamb.subskrypcje.subscribeZakoczeniePrzerwy(super.rtiamb);
+        fedamb.subskrypcje.subscribeWejscieDoKolejki(super.rtiamb);
     }
 
 }
