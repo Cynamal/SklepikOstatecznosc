@@ -73,6 +73,8 @@
 					semantics="NA" />
 				<parameter name="NumerKasy" dataType="HLAinteger32BE"
 					semantics="NA" />
+				<parameter name="IDKlienta" dataType="HLAinteger32BE"
+						   semantics="NA" />
 			</interactionClass>
 			<interactionClass name="RozpoczecieObslugi" sharing="PublishSubscribe"
 				dimensions="NA" transportation="HLAreliable" order="Receive"
@@ -81,6 +83,8 @@
 					semantics="NA" />
 				<parameter name="CzasOczekiwania" dataType="HLAinteger32BE"
 					semantics="NA" />
+				<parameter name="IDKlienta" dataType="HLAinteger32BE"
+						   semantics="NA" />
 			</interactionClass>
 			<interactionClass name="RozpocznijPrzerwe" sharing="PublishSubscribe"
 				dimensions="NA" transportation="HLAreliable" order="Receive"
@@ -93,6 +97,8 @@
 				semantics="NA">
 				<parameter name="CzasPrzerwy" dataType="HLAinteger32BE"
 					semantics="NA" />
+				<parameter name="NumerKasy" dataType="HLAinteger32BE"
+						   semantics="NA" />
 			</interactionClass>
 			<interactionClass name="UruchomNowaKase" sharing="PublishSubscribe"
 				dimensions="NA" transportation="HLAreliable" order="Receive"
