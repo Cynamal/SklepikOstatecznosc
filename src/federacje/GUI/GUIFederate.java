@@ -21,13 +21,30 @@ public class GUIFederate extends FederateAbstract {
     public AmbasadorAbstract fedamb;
     public GUIapp GUI;
     public Lock CheckStartedLock = new ReentrantLock();
-
+    public int liczbaKlientowWSklepie=0;
+    public int liczbaKlientowRobiacychZakupy=0;
     public LinkedList<Kasa> kasy = new LinkedList<>();
     private int IteratorKasy = 1;
     public GUIFederate(GUIapp GUI)
     {
         this.GUI=GUI;
     }
+
+    public void liczenieKlientowWSklepie(Klient klient){
+        if(klient.NumerKolejki == -1){
+            liczbaKlientowWSklepie++;
+            liczbaKlientowRobiacychZakupy++;
+        }
+    }
+
+    public void klientPrzestalRobicZakupy(){
+        liczbaKlientowRobiacychZakupy--;
+    }
+
+    public void klientOpuscilSklep(){
+        liczbaKlientowWSklepie--;
+    }
+
     public void runFederate(){
         fedamb = new AmbasadorAbstract();
         CommonrunFederate(federateName,fedamb);
@@ -38,36 +55,29 @@ public class GUIFederate extends FederateAbstract {
         System.out.println("Czekanie na rozpoczecie symulacji");
         while(!StartedForThread)
         {
-
-
-
             CheckStartedLock.lock();
             StartedForThread=fedamb.Started;
             CheckStartedLock.unlock();
         }
 
         try {
-
             wyslijZadanieRozpoczeciaSymulacji(1.0);
             System.out.println("Wystartowano");
         } catch (Exception rtIexception) {
             rtIexception.printStackTrace();
         }
 
-
-
-
         while(this.isRunning) {
             if (fedamb.externalEvents.size() > 0) {
                 Collections.sort(fedamb.externalEvents, new ExternalEventAbstract.ExternalEventComparator());
                 for (ExternalEventAbstract event : fedamb.externalEvents) {
                     try {
-
-
                         // System.out.println("w for");
                         switch (event.getEventType()) {
                             case Klient:
-                                log("Dodano klienta: " + event.getKlient());
+                                Klient klient = event.getKlient();
+                                log("Dodano klienta: " + klient);
+                                liczenieKlientowWSklepie(klient);
                                 break;
                             case Kasa:
                                 if(Kasa.addorChangeIfExist(event.getKasa(),kasy))
@@ -77,9 +87,14 @@ public class GUIFederate extends FederateAbstract {
                                 break;
                             case ZakonczanieObslugiKlienta:
                                 log("Zakonczenie obslugi klienta: " + event.getZakonczanieObslugiKlienta());
+                                klientOpuscilSklep();
                                 break;
                             case UruchomNowaKase:
                                 log("Odebrano zadanie uruchomienia kasy");
+                                break;
+                            case WejscieDoKolejki:
+                                log("Wejscie do kolejki: " + event.getWejscieDoKolejki());
+                                klientPrzestalRobicZakupy();
                                 break;
                         }
                     } catch (Exception e) {
