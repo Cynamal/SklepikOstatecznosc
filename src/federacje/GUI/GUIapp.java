@@ -19,6 +19,8 @@ import java.io.PrintStream;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static common.FederateAbstract.logS;
+
 /**
  * Created by Marcin on 22.06.2017.
  */
@@ -27,7 +29,7 @@ public class GUIapp extends Application {
     GUIFederate federate;
     Button StartSym;
     Button StopSym;
-    public static String GuiLog="GUIFaderate:";
+
 
     public ListView<String> IPLIst= new ListView<>();
     TextArea Konsola= new TextArea("Brak wpisow");
@@ -115,9 +117,12 @@ public class GUIapp extends Application {
 
                         @Override
                         public void run() {
+
+
+
                             ObservableList<String> items = FXCollections.observableArrayList(Kasa.ToStringList(federate.kasy));
                             IPLIst.setItems(items);
-                            Konsola.setText(GuiLog);
+                            Konsola.setText(logS);
                         }
                     });
                     try {

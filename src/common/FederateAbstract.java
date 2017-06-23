@@ -36,7 +36,7 @@ public class FederateAbstract  {
     public ListaKlientow kliencjiWSklepie=new ListaKlientow(Integer.MAX_VALUE);
     protected static void log(String x) {
         System.out.println(x);
-        logS+=x+"/n";
+        logS+=x+"\n";
     }
 
 
