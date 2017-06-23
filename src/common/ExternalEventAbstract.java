@@ -1,6 +1,7 @@
 package common;
 
 import Interactions.*;
+import common.handlers.ZakonczenieObslugiKlientaHandler;
 import objects.Kasa;
 import objects.Klient;
 
@@ -10,13 +11,62 @@ import java.util.Comparator;
  * Created by Marcin on 22.06.2017.
  */
 public class ExternalEventAbstract {
-    public enum EventType {Kasa, Klient,ZakonczanieObslugiKlienta,RozpoczecieSymulacji,ZakoczenieSymulacji,UruchomNowaKase}
+    public enum EventType {Kasa, Klient,ZakonczanieObslugiKlienta,RozpoczecieSymulacji,ZakoczenieSymulacji,UruchomNowaKase,ZakoczeniePrzerwy,WejscieDoKolejki,RozpocznijPrzerwe,RozpoczecieObslugi}
 
     private Klient k;
     private Kasa kas;
     private ZakonczanieObslugiKlienta zako;
+    private ZakoczeniePrzerwy zapr;
+    private WejscieDoKolejki wedo;
+    private RozpocznijPrzerwe ropr;
+    private RozpoczecieObslugi roob;
     private EventType eventType;
     private Double time;
+
+    public ZakoczeniePrzerwy getZakoczeniePrzerwy() {
+        return zapr;
+    }
+
+    public void ZakoczeniePrzerwyEvent(ZakoczeniePrzerwy zapr, Double time)
+    {
+        this.zapr = zapr;
+        this.eventType = EventType.ZakoczeniePrzerwy;
+        this.time = time;
+    }
+
+    public WejscieDoKolejki getWejscieDoKolejki() {
+        return wedo;
+    }
+
+    public void WejscieDoKolejkiEvent(WejscieDoKolejki wedo, Double time)
+    {
+        this.wedo = wedo;
+        this.eventType = EventType.WejscieDoKolejki;
+        this.time = time;
+    }
+
+    public RozpocznijPrzerwe getRozpocznijPrzerwe() {
+        return ropr;
+    }
+
+    public void RozpocznijPrzerweEvent(RozpocznijPrzerwe ropr, Double time)
+    {
+        this.ropr = ropr;
+        this.eventType = EventType.RozpocznijPrzerwe;
+        this.time = time;
+    }
+
+    public RozpoczecieObslugi getRozpoczecieObslugi() {
+        return roob;
+    }
+
+    public void RozpoczecieObslugiEvent(RozpoczecieObslugi roob, Double time)
+    {
+        this.roob = roob;
+        this.eventType = EventType.RozpoczecieObslugi;
+        this.time = time;
+    }
+
     public void RozpoczecieSymulacji(Double time)
     {
         this.eventType = EventType.RozpoczecieSymulacji;
