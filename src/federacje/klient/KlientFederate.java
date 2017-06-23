@@ -68,7 +68,6 @@ public class KlientFederate extends FederateAbstract {
              ) {
             if(kl.czasZakonczeniaZakupow==fedamb.federateTime)
             {
-                kliencjiWSklepie.remove(kl);
                 int nr= Kasa.FindBestQiue(kl.uprzywilejowany,kasy);
                 if(nr==-1)
                 {
@@ -76,6 +75,7 @@ public class KlientFederate extends FederateAbstract {
                 }
                 else
                 {
+                    //kliencjiWSklepie.remove(kl);
                     int miejsce=kasy.get(nr).kolejka.GetplaceWithPropity(kl.uprzywilejowany);
                     kl.NumerWKolejce=miejsce;
                     kl.NumerKolejki=nr;
@@ -114,20 +114,20 @@ public class KlientFederate extends FederateAbstract {
         new KlientFederate().runFederate();
     }
     double czasDodaniaNowegoKlienta=6.0;
-    int maximumTimeKlient=9;
+    int maximumTimeKlient=20;
     int maxCash=1000;
     private int KlientNextID=1;
     public void dodajKlienta()
     {
       if(czasDodaniaNowegoKlienta==fedamb.federateTime)
       {
-          int randTIMe= 1 + (int)(Math.random() * maximumTimeKlient);
+          int randTIMe= 5 + (int)(Math.random() * maximumTimeKlient);
           czasDodaniaNowegoKlienta+=randTIMe;
 
           try {
               int gotowka=100 + (int)(Math.random() * maxCash);
               int klienti=  registerKlient();
-              int czas=gotowka/100;
+              int czas=gotowka/10;
               Klient tmp=new Klient (KlientNextID++,false,-1,-1,gotowka,1+czas+fedamb.federateTime,klienti,fedamb.federateTime);
               kliencjiWSklepie.add(tmp);
               UpdateKlienttoRTI(klienti, tmp);

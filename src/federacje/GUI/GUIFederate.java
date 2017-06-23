@@ -23,6 +23,7 @@ public class GUIFederate extends FederateAbstract {
     public Lock CheckStartedLock = new ReentrantLock();
     public int liczbaKlientowWSklepie=0;
     public int liczbaKlientowRobiacychZakupy=0;
+    public static String dzialanieLog="";
     public LinkedList<Kasa> kasy = new LinkedList<>();
     private int IteratorKasy = 1;
     public GUIFederate(GUIapp GUI)
