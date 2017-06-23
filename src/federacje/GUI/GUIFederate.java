@@ -33,7 +33,7 @@ public class GUIFederate extends FederateAbstract {
     }
 
     public static void logowanieDzialania(String x){
-        dzialanieLog+=x+"\n";
+        dzialanieLog=x+"\n"+dzialanieLog;
     }
 
     public void liczenieKlientowWSklepie(Klient klient){
