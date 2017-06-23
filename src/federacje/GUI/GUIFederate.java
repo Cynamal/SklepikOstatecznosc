@@ -70,7 +70,10 @@ public class GUIFederate extends FederateAbstract {
                                 log("Dodano klienta: " + event.getKlient());
                                 break;
                             case Kasa:
-                                log("Dodano kase: " + event.getKasa());
+                                if(Kasa.addorChangeIfExist(event.getKasa(),kasy))
+                                    log("Odebrano nowa kase:"+event.getKasa());
+                                else
+                                    log("Zaktualizowano kase:"+event.getKasa());
                                 break;
                             case ZakonczanieObslugiKlienta:
                                 log("Zakonczenie obslugi klienta: " + event.getZakonczanieObslugiKlienta());
@@ -83,7 +86,7 @@ public class GUIFederate extends FederateAbstract {
 
                     }
                 }
-
+                fedamb.externalEvents.clear();
             }
             try {
                 advanceTime(1.0,fedamb);

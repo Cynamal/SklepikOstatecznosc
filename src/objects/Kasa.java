@@ -175,5 +175,15 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
         list.add(kasa);
         return true;
     }
+    @Override
+    public String toString() {
+        String pelna= " i pelana";
+        String otwarta="zamknieta";
+        if(CzyOtwarta)
+            otwarta="otwarta";
 
+        if(!CzyPelna)
+            pelna="";
+        return "Kasa o numerze:"+NumerKasy+" Dlugos kolejki:"+Dlugosc+" jest "+otwarta+pelna;
+    }
 }

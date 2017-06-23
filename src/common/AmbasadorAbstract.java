@@ -205,6 +205,22 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
     protected double convertTime(LogicalTime logicalTime) {
         return ((DoubleTime) logicalTime).getTime();
     }
+
+    public void reflectAttributeValues(int theObject,
+                                       ReflectedAttributes theAttributes,
+                                       byte[] tag)
+    {
+        reflectAttributeValues(theObject, theAttributes, tag, null, null);
+    }
+    public void discoverObjectInstance ( int theObject,
+                                         int theObjectClass,
+                                         String objectName )
+    {
+        log("Discovered object: handle="+theObject+", classHandle="+ theObjectClass + ", name="+objectName);
+
+        //Zestawienie handle z name
+        pairList.add(new java.util.AbstractMap.SimpleEntry<>(objectName,theObject));
+    }
     public void reflectAttributeValues(int theObject,
                                        ReflectedAttributes theAttributes,
                                        byte[] tag,
