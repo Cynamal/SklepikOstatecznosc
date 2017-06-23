@@ -75,6 +75,7 @@ public class StatystykaFederate extends FederateAbstract {
                                 break;
                             case ZakoczenieSymulacji:
                                 log("Odebrano zakonczenie symulacji");
+                                this.isRunning=false;
                                 break;
                             case RozpoczecieSymulacji:
                                 log("Odebrano rozpoczecie symulacji");
