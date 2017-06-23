@@ -10,13 +10,28 @@ import java.util.Comparator;
  * Created by Marcin on 22.06.2017.
  */
 public class ExternalEventAbstract {
-    public enum EventType {Kasa, Klient,ZakonczanieObslugiKlienta}
+    public enum EventType {Kasa, Klient,ZakonczanieObslugiKlienta,RozpoczecieSymulacji,ZakoczenieSymulacji,UruchomNowaKase}
 
     private Klient k;
     private Kasa kas;
     private ZakonczanieObslugiKlienta zako;
     private EventType eventType;
     private Double time;
+    public void RozpoczecieSymulacji(Double time)
+    {
+        this.eventType = EventType.RozpoczecieSymulacji;
+        this.time = time;
+    }
+    public void ZakoczenieSymulacji(Double time)
+    {
+        this.eventType = EventType.ZakoczenieSymulacji;
+        this.time = time;
+    }
+    public void UruchomNowaKase(Double time)
+    {
+        this.eventType = EventType.UruchomNowaKase;
+        this.time = time;
+    }
     public void ZakonczanieObslugiKlientaEvent(ZakonczanieObslugiKlienta zako, Double time)
     {
         this.zako = zako;

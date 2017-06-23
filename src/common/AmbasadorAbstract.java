@@ -136,7 +136,9 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
         if(interactionClass ==subskrypcje.rozpoczecieSymulacjiHandler.getRozpoczecieSymulacjiHandler()) {
 
             builder.append("Start Symulacji z gui\n");
-            isRunning=true;
+            double time = convertTime(theTime);
+            externalEvent.RozpoczecieSymulacji(time);
+            this.externalEvents.add(externalEvent);
 
         }
         } catch (Exception e)
@@ -148,8 +150,23 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
         if(interactionClass ==subskrypcje.zakonczenieSymulacjiHandler.getZakonczenieSymulacjiHandler()) {
 
             builder.append("Zakonczenie symulacji z gui\n");
-            isRunning=false;
+            double time = convertTime(theTime);
+            externalEvent.ZakoczenieSymulacji(time);
+            this.externalEvents.add(externalEvent);
         }
+        } catch (Exception e)
+        {
+
+        }
+        try
+        {
+            if(interactionClass ==subskrypcje.uruchomNowaKaseHandler.getUruchomNowaKaseHandler()) {
+
+                builder.append("Zadanie uruchomienia nowej kasy\n");
+                double time = convertTime(theTime);
+                externalEvent.UruchomNowaKase(time);
+                this.externalEvents.add(externalEvent);
+            }
         } catch (Exception e)
         {
 
