@@ -8,7 +8,7 @@ import java.util.LinkedList;
 public class ListaKlientow extends LinkedList<Klient> {
     int WielkoscMax;
 
-    ListaKlientow(int WielkoscMax) {
+    public ListaKlientow(int WielkoscMax) {
         this.WielkoscMax = WielkoscMax;
     }
 

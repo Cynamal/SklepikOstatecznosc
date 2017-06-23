@@ -67,13 +67,16 @@ public class GUIFederate extends FederateAbstract {
                         // System.out.println("w for");
                         switch (event.getEventType()) {
                             case Klient:
-                                System.out.println("Dodano klienta: " + event.getKlient());
+                                log("Dodano klienta: " + event.getKlient());
                                 break;
                             case Kasa:
-                                System.out.println("Dodano kase: " + event.getKasa());
+                                log("Dodano kase: " + event.getKasa());
                                 break;
                             case ZakonczanieObslugiKlienta:
-                                System.out.println("Zakonczenie obslugi klienta: " + event.getZakonczanieObslugiKlienta());
+                                log("Zakonczenie obslugi klienta: " + event.getZakonczanieObslugiKlienta());
+                                break;
+                            case UruchomNowaKase:
+                                log("Odebrano zadanie uruchomienia kasy");
                                 break;
                         }
                     } catch (Exception e) {
@@ -81,6 +84,11 @@ public class GUIFederate extends FederateAbstract {
                     }
                 }
 
+            }
+            try {
+                advanceTime(1.0,fedamb);
+            } catch (RTIexception rtIexception) {
+                rtIexception.printStackTrace();
             }
         }
     }
