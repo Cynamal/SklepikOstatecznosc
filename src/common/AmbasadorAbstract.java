@@ -1,7 +1,6 @@
 package common;
 
-import Interactions.RozpoczecieObslugi;
-import Interactions.ZakonczanieObslugiKlienta;
+import Interactions.*;
 import hla.rti.*;
 import hla.rti.jlc.EncodingHelpers;
 import hla.rti.jlc.NullFederateAmbassador;
@@ -115,6 +114,42 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
             builder.append(", time=" + convertTime(theTime));
 
         try {
+            if(interactionClass ==subskrypcje.zakoczeniePrzerwyHandler.getZakoczeniePrzerwyHandler()) {
+                int CzasPrzerwy = EncodingHelpers.decodeInt(theInteraction.getValue(0));
+                int NumerKasy = EncodingHelpers.decodeInt(theInteraction.getValue(1));
+                double time = convertTime(theTime);
+                externalEvent.ZakoczeniePrzerwyEvent(new ZakoczeniePrzerwy(CzasPrzerwy,NumerKasy),time);
+
+                builder.append("Odebrano interakcje zakonczenia przerwy\n");
+
+                this.externalEvents.add(externalEvent);
+            }} catch (Exception e){}
+
+        try {
+            if(interactionClass ==subskrypcje.rozpocznijPrzerweHandler.getRozpocznijPrzerweHandler()) {
+                int NumerKasy = EncodingHelpers.decodeInt(theInteraction.getValue(0));
+                double time = convertTime(theTime);
+                externalEvent.RozpocznijPrzerweEvent(new RozpocznijPrzerwe(NumerKasy),time);
+
+                builder.append("Odebrano interakcje rozpoczecia przerwy\n");
+
+                this.externalEvents.add(externalEvent);
+            }} catch (Exception e){}
+
+        try {
+            if(interactionClass ==subskrypcje.wejscieDoKolejkiHandler.getWejscieDoKolejkiHandler()) {
+                int CzasZakupow = EncodingHelpers.decodeInt(theInteraction.getValue(0));
+                int NumerKasy = EncodingHelpers.decodeInt(theInteraction.getValue(1));
+                int IDKlienta = EncodingHelpers.decodeInt(theInteraction.getValue(2));
+                double time = convertTime(theTime);
+                externalEvent.WejscieDoKolejkiEvent(new WejscieDoKolejki(CzasZakupow,NumerKasy,IDKlienta),time);
+
+                builder.append("Odebrano interakcje wejscia do kolejki\n");
+
+                this.externalEvents.add(externalEvent);
+            }} catch (Exception e){}
+
+        try {
             if(interactionClass ==subskrypcje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler()) {
                 int NumerKasy = EncodingHelpers.decodeInt(theInteraction.getValue(0));
                 int CzasOczekiwania = EncodingHelpers.decodeInt(theInteraction.getValue(1));
@@ -122,7 +157,7 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
                 double time = convertTime(theTime);
                 externalEvent.RozpoczecieObslugiEvent(new RozpoczecieObslugi(CzasOczekiwania,NumerKasy,IDKlienta),time);
 
-                builder.append("Odebrano interakcje zakonczenia obslugi klienta\n");
+                builder.append("Odebrano interakcje rozpoczecia obslugi klienta\n");
 
                 this.externalEvents.add(externalEvent);
             }} catch (Exception e){}
