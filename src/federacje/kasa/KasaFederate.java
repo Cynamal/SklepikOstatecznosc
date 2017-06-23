@@ -6,9 +6,11 @@ import common.ExternalEventAbstract;
 import common.FederateAbstract;
 import hla.rti.LogicalTime;
 import hla.rti.RTIexception;
+import hla.rti.SuppliedAttributes;
 import hla.rti.SuppliedParameters;
 import hla.rti.jlc.EncodingHelpers;
 import hla.rti.jlc.RtiFactoryFactory;
+import objects.Kasa;
 
 import java.util.Collections;
 
@@ -37,7 +39,7 @@ public class KasaFederate extends FederateAbstract {
 
                             case UruchomNowaKase:
                                 log("Odebrano zadanie uruchomienia kasy");
-
+                                UruchomNowaKase();
                                 break;
                         }
                     } catch (Exception e) {
@@ -54,6 +56,37 @@ public class KasaFederate extends FederateAbstract {
             }
         }
     }
+    private void initKasa(int kasaHandle, Kasa kasa) throws RTIexception {
+        SuppliedAttributes attributes =
+                RtiFactoryFactory.getRtiFactory().createSuppliedAttributes();
+
+        byte[] NumerKasy = EncodingHelpers.encodeInt(kasa.NumerKasy);
+        byte[] Dlugosc = EncodingHelpers.encodeInt(kasa.Dlugosc);
+        byte[] CzyPelna = EncodingHelpers.encodeBoolean(kasa.CzyPelna);
+        byte[] CzyOtwarta = EncodingHelpers.encodeBoolean(kasa.CzyOtwarta);
+
+        attributes.add(fedamb.publikacje.kasaHandler.NumerKasyHandler, NumerKasy);
+        attributes.add(fedamb.publikacje.kasaHandler.DlugoscHandler, Dlugosc);
+        attributes.add(fedamb.publikacje.kasaHandler.CzyPelnaHandler, CzyPelna);
+        attributes.add(fedamb.publikacje.kasaHandler.CzyOtwartaHandler, CzyOtwarta);
+
+        LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
+        rtiamb.updateAttributeValues(kasaHandle, attributes, generateTag(), time);
+        System.out.println("wyslano" + fedamb.publikacje.kasaHandler.getKasaHandler() + "," + attributes + ",");
+    }
+    private int registerKasa() throws RTIexception {
+        return rtiamb.registerObjectInstance(fedamb.publikacje.kasaHandler.getKasaHandler(), "Kasa" + IteratorKasy);
+
+    }
+    private int IteratorKasy = 1;
+    private void UruchomNowaKase() throws RTIexception {
+        int hendKasa=registerKasa();
+        Kasa tmp = new Kasa(IteratorKasy++, 0, false, true);
+        kasy.add(tmp);
+        initKasa(hendKasa,tmp);
+
+    }
+
     public static void main(String[] args) {
         new KasaFederate().runFederate();
     }
