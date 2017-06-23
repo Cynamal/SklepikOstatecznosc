@@ -19,6 +19,9 @@ public class Kasa {
     public boolean CzyOtwarta;
     public static int MaxSizeofQiue=10;
     public int hendKasa;
+    public boolean czyObsluguje=false;
+    public double czasRozpoczeciaObslugi;
+    public double czasZakonczeniaObslugi;
     public Kasa(int NumerKasy,int Dlugosc, boolean CzyPelna,boolean CzyOtwarta,int hendKasa)
     {
         this.hendKasa=hendKasa;

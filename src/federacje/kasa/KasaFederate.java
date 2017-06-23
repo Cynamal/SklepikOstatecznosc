@@ -11,6 +11,7 @@ import hla.rti.SuppliedAttributes;
 import hla.rti.SuppliedParameters;
 import hla.rti.jlc.RtiFactoryFactory;
 import objects.Kasa;
+import objects.Klient;
 import objects.ListaKlientow;
 
 import java.util.Collections;
@@ -56,11 +57,18 @@ public class KasaFederate extends FederateAbstract {
                                 if(kliencjiWSklepie.addorChangeIfExist(event.getKlient()))
                                 {
                                     log("Odebrano nowego klienta: "+event.getKlient());
+
+
                                 }
                                 else
                                 {
                                     log("Odebrano aktualizacje klienta: "+event.getKlient());
                                 }
+                                for (Klient kl:kliencjiWSklepie
+                                        ) {
+                                    System.out.print("kl: "+kl);
+                                }
+                                System.out.println();
                                 break;
                             case WejscieDoKolejki:
                                 WejscieDoKolejki kolejk= event.getWejscieDoKolejki();
@@ -78,12 +86,19 @@ public class KasaFederate extends FederateAbstract {
                 }
                 fedamb.externalEvents.clear();
             }
-
+                RozpocznijObsluge();
             try {
                 advanceTime(1.0,fedamb);
             } catch (RTIexception rtIexception) {
                 rtIexception.printStackTrace();
             }
+        }
+    }
+
+    private void RozpocznijObsluge() {
+        for (Kasa kas: kasy
+             ) {
+            if()
         }
     }
 

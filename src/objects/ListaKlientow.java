@@ -40,7 +40,12 @@ public class ListaKlientow extends LinkedList<Klient> {
         {
             if(tmp.IDKlienta==klient.IDKlienta)
             {
-                tmp=klient;
+                tmp.NumerKolejki=klient.NumerKolejki;
+                tmp.Gotowka=klient.Gotowka;
+                tmp.NumerWKolejce=klient.NumerWKolejce;
+                tmp.uprzywilejowany=klient.uprzywilejowany;
+
+              //  tmp=klient;
                 return false;
             }
         }
@@ -63,6 +68,11 @@ public class ListaKlientow extends LinkedList<Klient> {
                 return i;
         }
         return -1;
+    }
+    public int getFirst(int IndexKasa)
+    {
+        //#TODO tu ma byc zwracanie pierwszego klienta dla kasy
+        return 0;
     }
     public Klient GetAndRemove(int index)
     {
