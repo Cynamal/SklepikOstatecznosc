@@ -33,7 +33,7 @@ public class GUIFederate extends FederateAbstract {
     }
 
     public static void logowanieDzialania(String x){
-        dzialanieLog+=x+"\n";
+        dzialanieLog=x+"\n"+dzialanieLog;
     }
 
     public void liczenieKlientowWSklepie(Klient klient){
@@ -109,7 +109,7 @@ public class GUIFederate extends FederateAbstract {
                                 WejscieDoKolejki wej = event.getWejscieDoKolejki();
                                 log("Wejscie do kolejki: " + wej);
                                 klientPrzestalRobicZakupy();
-                                logowanieDzialania("Klient o ID "+wej.IDKlienta+"Zakonczyl zakupy po czasie "+wej.CzasZakupow+". Stanal w kolejce do kasy o numerze "+wej.NumerKasy);
+                                logowanieDzialania("Klient o ID "+wej.IDKlienta+" zakonczyl zakupy po czasie "+wej.CzasZakupow+". Stanal w kolejce do kasy o numerze "+wej.NumerKasy);
                                 break;
                             case RozpoczecieObslugi:
                                 RozpoczecieObslugi roz = event.getRozpoczecieObslugi();
