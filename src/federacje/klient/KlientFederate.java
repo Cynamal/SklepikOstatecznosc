@@ -12,6 +12,7 @@ import hla.rti.jlc.EncodingHelpers;
 import hla.rti.jlc.RtiFactoryFactory;
 import objects.Kasa;
 import objects.Klient;
+import objects.ListaKlientow;
 
 import java.util.Collections;
 
@@ -64,6 +65,7 @@ public class KlientFederate extends FederateAbstract {
     }
 
     private void wchodzenieDokolejki() {
+        ListaKlientow DoWywalenia= new ListaKlientow(Integer.MAX_VALUE);
         for (Klient kl: kliencjiWSklepie
              ) {
             if(kl.czasZakonczeniaZakupow==fedamb.federateTime)
@@ -75,7 +77,8 @@ public class KlientFederate extends FederateAbstract {
                 }
                 else
                 {
-                    //kliencjiWSklepie.remove(kl);
+                    DoWywalenia.add(kl);
+
                     int miejsce=kasy.get(nr).kolejka.GetplaceWithPropity(kl.uprzywilejowany);
                     kl.NumerWKolejce=miejsce;
                     kl.NumerKolejki=nr;
@@ -93,6 +96,11 @@ public class KlientFederate extends FederateAbstract {
             }
 
 
+        }
+        //Wywalanie z listy
+        for (Klient kl:DoWywalenia
+             ) {
+            kliencjiWSklepie.remove(kl);
         }
     }
     public void wyslijInterakcjeWejsciaDoKolejki(WejscieDoKolejki wej) throws Exception
