@@ -8,7 +8,6 @@ import hla.rti.LogicalTime;
 import hla.rti.RTIexception;
 import hla.rti.SuppliedAttributes;
 import hla.rti.SuppliedParameters;
-import hla.rti.jlc.EncodingHelpers;
 import hla.rti.jlc.RtiFactoryFactory;
 import objects.Kasa;
 
@@ -56,22 +55,17 @@ public class KasaFederate extends FederateAbstract {
             }
         }
     }
-    private void initKasa(int kasaHandle, Kasa kasa) throws RTIexception {
-        SuppliedAttributes attributes =
-                RtiFactoryFactory.getRtiFactory().createSuppliedAttributes();
 
-        byte[] NumerKasy = EncodingHelpers.encodeInt(kasa.NumerKasy);
-        byte[] Dlugosc = EncodingHelpers.encodeInt(kasa.Dlugosc);
-        byte[] CzyPelna = EncodingHelpers.encodeBoolean(kasa.CzyPelna);
-        byte[] CzyOtwarta = EncodingHelpers.encodeBoolean(kasa.CzyOtwarta);
+    /** Wysyla parametry kasy do rti Moze byc uzyta do inicjalizacji lub aktualizacji
+     * @param kasaHandle hendler kasy stworzony przy registerKasa
+     * @param kasa Obiekt kasy
+     * @throws RTIexception
+     */
+    private void sendKasaToRTI(int kasaHandle, Kasa kasa) throws RTIexception {
 
-        attributes.add(fedamb.publikacje.kasaHandler.NumerKasyHandler, NumerKasy);
-        attributes.add(fedamb.publikacje.kasaHandler.DlugoscHandler, Dlugosc);
-        attributes.add(fedamb.publikacje.kasaHandler.CzyPelnaHandler, CzyPelna);
-        attributes.add(fedamb.publikacje.kasaHandler.CzyOtwartaHandler, CzyOtwarta);
-
+        SuppliedAttributes attributes= kasa.getRTIAtributes(fedamb);
         LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
-        rtiamb.updateAttributeValues(kasaHandle, attributes, generateTag(), time);
+        rtiamb.updateAttributeValues(kasaHandle,attributes, generateTag(), time);
         System.out.println("wyslano" + fedamb.publikacje.kasaHandler.getKasaHandler() + "," + attributes + ",");
     }
     private int registerKasa() throws RTIexception {
@@ -83,7 +77,7 @@ public class KasaFederate extends FederateAbstract {
         int hendKasa=registerKasa();
         Kasa tmp = new Kasa(IteratorKasy++, 0, false, true);
         kasy.add(tmp);
-        initKasa(hendKasa,tmp);
+        sendKasaToRTI(hendKasa,tmp);
 
     }
 

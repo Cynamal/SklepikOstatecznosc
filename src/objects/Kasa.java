@@ -1,5 +1,11 @@
 package objects;
 
+import common.AmbasadorAbstract;
+import hla.rti.RTIinternalError;
+import hla.rti.SuppliedAttributes;
+import hla.rti.jlc.EncodingHelpers;
+import hla.rti.jlc.RtiFactoryFactory;
+
 import java.util.LinkedList;
 
 /**
@@ -26,7 +32,21 @@ public class Kasa {
         this.CzyPelna=true;
         this.CzyOtwarta=false;
     }
+    public SuppliedAttributes getRTIAtributes(AmbasadorAbstract fedamb) throws RTIinternalError {
+        SuppliedAttributes attributes =
+                RtiFactoryFactory.getRtiFactory().createSuppliedAttributes();
 
+        byte[] NumerKasy = EncodingHelpers.encodeInt(this.NumerKasy);
+        byte[] Dlugosc = EncodingHelpers.encodeInt(this.Dlugosc);
+        byte[] CzyPelna = EncodingHelpers.encodeBoolean(this.CzyPelna);
+        byte[] CzyOtwarta = EncodingHelpers.encodeBoolean(this.CzyOtwarta);
+
+        attributes.add(fedamb.publikacje.kasaHandler.NumerKasyHandler, NumerKasy);
+        attributes.add(fedamb.publikacje.kasaHandler.DlugoscHandler, Dlugosc);
+        attributes.add(fedamb.publikacje.kasaHandler.CzyPelnaHandler, CzyPelna);
+        attributes.add(fedamb.publikacje.kasaHandler.CzyOtwartaHandler, CzyOtwarta);
+        return attributes;
+    }
     /** Dodaje klienta lub aktualizuje jesli juz istnieje w liscie kas lub w licie klientow w sklepie
      * @param klient klient otrzymany z rti
      * @param list lista kas
