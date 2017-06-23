@@ -108,7 +108,7 @@ public class GUIapp extends Application {
         primaryStage.show();
         rewriteControls();
     }
-    ObservableList<String> oldItems= FXCollections.observableArrayList(Kasa.ToStringList(federate.kasy));
+    ObservableList<String> oldItems;
     String oldLog=dzialanieLog;
     public void rewriteControls()
     {
