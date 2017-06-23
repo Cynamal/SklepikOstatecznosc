@@ -1,5 +1,6 @@
 package federacje.GUI;
 
+import Interactions.*;
 import common.AmbasadorAbstract;
 import common.ExternalEventAbstract;
 import common.FederateAbstract;
@@ -31,10 +32,15 @@ public class GUIFederate extends FederateAbstract {
         this.GUI=GUI;
     }
 
+    public static void logowanieDzialania(String x){
+        dzialanieLog+=x+"\n";
+    }
+
     public void liczenieKlientowWSklepie(Klient klient){
         if(klient.NumerKolejki == -1){
             liczbaKlientowWSklepie++;
             liczbaKlientowRobiacychZakupy++;
+            logowanieDzialania("Do sklepu wszedl klient o ID: " + klient.IDKlienta + " i rozpoczal zakupy");
         }
     }
 
@@ -81,21 +87,41 @@ public class GUIFederate extends FederateAbstract {
                                 liczenieKlientowWSklepie(klient);
                                 break;
                             case Kasa:
-                                if(Kasa.addorChangeIfExist(event.getKasa(),kasy))
-                                    log("Odebrano nowa kase:"+event.getKasa());
+                                Kasa kasa = event.getKasa();
+                                if(Kasa.addorChangeIfExist(kasa,kasy)){
+                                    logowanieDzialania("Otwarto nowa kase o numerze: " + kasa.NumerKasy);
+                                    log("Odebrano nowa kase:"+kasa);
+                                }
                                 else
-                                    log("Zaktualizowano kase:"+event.getKasa());
+                                    log("Zaktualizowano kase:"+kasa);
                                 break;
                             case ZakonczanieObslugiKlienta:
-                                log("Zakonczenie obslugi klienta: " + event.getZakonczanieObslugiKlienta());
+                                ZakonczanieObslugiKlienta zak = event.getZakonczanieObslugiKlienta();
+                                logowanieDzialania("Klient o ID " + zak.IDKlienta + " zostal obsluzony i opuscil sklep. Czas obslugi trwal " + zak.CzasObslugi);
+                                log("Zakonczenie obslugi klienta: " + zak);
                                 klientOpuscilSklep();
                                 break;
                             case UruchomNowaKase:
                                 log("Odebrano zadanie uruchomienia kasy");
+                                logowanieDzialania("Wlasciciel sklepu podjal decyzje o uruchomieniu nowej kasy");
                                 break;
                             case WejscieDoKolejki:
-                                log("Wejscie do kolejki: " + event.getWejscieDoKolejki());
+                                WejscieDoKolejki wej = event.getWejscieDoKolejki();
+                                log("Wejscie do kolejki: " + wej);
                                 klientPrzestalRobicZakupy();
+                                logowanieDzialania("Klient o ID "+wej.IDKlienta+"Zakonczyl zakupy po czasie "+wej.CzasZakupow+". Stanal w kolejce do kasy o numerze "+wej.NumerKasy);
+                                break;
+                            case RozpoczecieObslugi:
+                                RozpoczecieObslugi roz = event.getRozpoczecieObslugi();
+                                logowanieDzialania("Kasa o numerze "+roz.NumerKasy+" rozpoczela obsluge klienta o ID "+roz.IDKlienta+". Czas oczekiwania klienta w kolejce wynosil "+roz.CzasOczekiwania);
+                                break;
+                            case RozpocznijPrzerwe:
+                                RozpocznijPrzerwe rop = event.getRozpocznijPrzerwe();
+                                logowanieDzialania("Kasa o numerze "+rop.NumerKasy +" zostala oznaczona do zamkniecia");
+                                break;
+                            case ZakoczeniePrzerwy:
+                                ZakoczeniePrzerwy zap = event.getZakoczeniePrzerwy();
+                                logowanieDzialania("Kasa o numerze "+zap.NumerKasy+" zakonczyla przerwe. Czas przerwy wynosil "+zap.CzasPrzerwy);
                                 break;
                         }
                     } catch (Exception e) {

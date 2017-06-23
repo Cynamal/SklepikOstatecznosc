@@ -20,6 +20,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static common.FederateAbstract.logS;
+import static federacje.GUI.GUIFederate.dzialanieLog;
 
 /**
  * Created by Marcin on 22.06.2017.
@@ -122,7 +123,8 @@ public class GUIapp extends Application {
 
                             ObservableList<String> items = FXCollections.observableArrayList(Kasa.ToStringList(federate.kasy));
                             IPLIst.setItems(items);
-                            Konsola.setText(logS);
+                            Konsola.setText(dzialanieLog);
+                            //Konsola.setText(logS);
                         }
                     });
                     try {

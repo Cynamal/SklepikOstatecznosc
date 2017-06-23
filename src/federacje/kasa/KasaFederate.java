@@ -19,7 +19,7 @@ import java.util.Collections;
  * Created by Marcin on 22.06.2017.
  */
 public class KasaFederate extends FederateAbstract {
-    public int PoczatkowaLiczbaKas=0;
+    public int PoczatkowaLiczbaKas=10;
     public static final String federateName = "KasaFederate";
     public AmbasadorAbstract fedamb;
 
