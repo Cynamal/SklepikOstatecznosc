@@ -17,6 +17,7 @@ import java.util.Collections;
  * Created by Marcin on 22.06.2017.
  */
 public class KasaFederate extends FederateAbstract {
+    public int PoczatkowaLiczbaKas=10;
     public static final String federateName = "KasaFederate";
     public AmbasadorAbstract fedamb;
 
@@ -25,6 +26,14 @@ public class KasaFederate extends FederateAbstract {
         CommonrunFederate(federateName,fedamb);
         publishAndSubscribe();
         czekajNAGUI(fedamb);
+        for(int i=0;i<PoczatkowaLiczbaKas;i++)
+        {
+            try {
+            UruchomNowaKase();
+            } catch (Exception e) {
+                log("cos nie teges z kasami:"+e);
+            }
+        }
         while(this.isRunning)
         {
             if (fedamb.externalEvents.size() > 0) {
@@ -45,7 +54,7 @@ public class KasaFederate extends FederateAbstract {
 
                     }
                 }
-
+                fedamb.externalEvents.clear();
             }
 
             try {
@@ -66,7 +75,7 @@ public class KasaFederate extends FederateAbstract {
         SuppliedAttributes attributes= kasa.getRTIAtributes(fedamb);
         LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
         rtiamb.updateAttributeValues(kasaHandle,attributes, generateTag(), time);
-        System.out.println("wyslano" + fedamb.publikacje.kasaHandler.getKasaHandler() + "," + attributes + ",");
+        System.out.println("wyslano " + kasa +"czas:"+time );
     }
     private int registerKasa() throws RTIexception {
         return rtiamb.registerObjectInstance(fedamb.publikacje.kasaHandler.getKasaHandler(), "Kasa" + IteratorKasy);
