@@ -18,8 +18,18 @@ public class Kasa {
     public boolean CzyPelna;
     public boolean CzyOtwarta;
     public static int MaxSizeofQiue=10;
+    public int hendKasa;
+    public Kasa(int NumerKasy,int Dlugosc, boolean CzyPelna,boolean CzyOtwarta,int hendKasa)
+    {
+        this.hendKasa=hendKasa;
+        this.NumerKasy=NumerKasy;
+        this.Dlugosc=Dlugosc;
+        this.CzyPelna=CzyPelna;
+        this.CzyOtwarta=CzyOtwarta;
+    }
     public Kasa(int NumerKasy,int Dlugosc, boolean CzyPelna,boolean CzyOtwarta)
     {
+
         this.NumerKasy=NumerKasy;
         this.Dlugosc=Dlugosc;
         this.CzyPelna=CzyPelna;
@@ -47,6 +57,7 @@ public class Kasa {
         attributes.add(fedamb.publikacje.kasaHandler.CzyOtwartaHandler, CzyOtwarta);
         return attributes;
     }
+
     /** Dodaje klienta lub aktualizuje jesli juz istnieje w liscie kas lub w licie klientow w sklepie
      * @param klient klient otrzymany z rti
      * @param list lista kas
@@ -55,18 +66,31 @@ public class Kasa {
      */
 public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient klient,LinkedList<Kasa> list,ListaKlientow klienciWSklepie)
 {
-    if(klient.NumerKolejki==-1)
-    {
-     return  klienciWSklepie.addorChangeIfExist(klient);
-    }
-    else
-    {
-        try {
-          return  Kasa.addorChangeIfExistClientToListOfKasa(klient,list);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+   int czyRobiZakupy= klienciWSklepie.getIndexByID(klient.IDKlienta);
+   if(czyRobiZakupy!=-1)
+   {
+       if(klient.NumerWKolejce==-1)
+       return klienciWSklepie.addorChangeIfExist(klient);
+       else
+       {
+           try {
+           klienciWSklepie.remove(klient);
+
+               return addorChangeIfExistClientToListOfKasa(klient,list);
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+       }
+   }
+   else
+   {
+       try {
+           return addorChangeIfExistClientToListOfKasa(klient,list);
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+   }
+
     return false;
 }
     /** Dodaje klienta lub aktualizuje jesli juz istnieje w liscie kas
@@ -185,5 +209,13 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
         if(!CzyPelna)
             pelna="";
         return "Kasa o numerze:"+NumerKasy+" Dlugos kolejki:"+Dlugosc+" jest "+otwarta+pelna;
+    }
+    public static Kasa FindbyID(LinkedList<Kasa> kasy,int numerKasy) throws Exception
+    {
+        for (Kasa ret:kasy
+             ) {
+            if(ret.NumerKasy==numerKasy) return ret;
+        }
+        throw new Exception("Nie znaleziono kasy");
     }
 }

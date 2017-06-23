@@ -6,7 +6,7 @@ import java.util.LinkedList;
  * Created by Marcin on 22.06.2017.
  */
 public class ListaKlientow extends LinkedList<Klient> {
-    int WielkoscMax;
+    public int WielkoscMax;
 
     public ListaKlientow(int WielkoscMax) {
         this.WielkoscMax = WielkoscMax;
@@ -54,6 +54,15 @@ public class ListaKlientow extends LinkedList<Klient> {
             ret.add(tmp.toString());
         }
         return ret;
+    }
+    public int getIndexByID(int id)
+    {
+        for(int i=0;i<this.size();i++)
+        {
+            if(this.get(i).IDKlienta==id)
+                return i;
+        }
+        return -1;
     }
     public Klient GetAndRemove(int index)
     {

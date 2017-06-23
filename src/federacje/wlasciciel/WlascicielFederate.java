@@ -1,6 +1,7 @@
 package federacje.wlasciciel;
 
 import common.AmbasadorAbstract;
+import common.ExternalEventAbstract;
 import common.FederateAbstract;
 import federacje.kasa.KasaFederate;
 import hla.rti.LogicalTime;
@@ -10,6 +11,7 @@ import hla.rti.jlc.RtiFactoryFactory;
 import objects.Kasa;
 import objects.Klient;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 /**
@@ -20,13 +22,45 @@ public class WlascicielFederate extends FederateAbstract {
     public AmbasadorAbstract fedamb;
 
     public void runFederate(){
+        boolean wyslanoZadanieDodaniaNowej=false;
         fedamb = new AmbasadorAbstract();
         CommonrunFederate(federateName,fedamb);
         publishAndSubscribe();
         czekajNAGUI(fedamb);
         while(this.isRunning)
         {
-            OtworzKaseJezeliKonieczne();
+            if (fedamb.externalEvents.size() > 0) {
+                Collections.sort(fedamb.externalEvents, new ExternalEventAbstract.ExternalEventComparator());
+                for (ExternalEventAbstract event : fedamb.externalEvents) {
+                    try {
+
+
+                        // System.out.println("w for");
+                        switch (event.getEventType()) {
+                            case Kasa:
+                                if(Kasa.addorChangeIfExist(event.getKasa(),kasy))
+                                {
+                                    log("Odebrano nowa kase:"+event.getKasa());
+                                    wyslanoZadanieDodaniaNowej=false;
+                                }
+
+                                else
+                                    log("Zaktualizowano kase:"+event.getKasa());
+                                break;
+
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+                fedamb.externalEvents.clear();
+            }
+            if(!wyslanoZadanieDodaniaNowej)
+            {
+                OtworzKaseJezeliKonieczne();
+                wyslanoZadanieDodaniaNowej=true;
+            }
+
 
             try {
                 advanceTime(1.0,fedamb);
@@ -70,7 +104,7 @@ public class WlascicielFederate extends FederateAbstract {
         fedamb.publikacje.publishRozpocznijPrzerwe(rtiamb);
         //obiekty
         fedamb.subskrypcje.subscribeKasa(rtiamb);
-        fedamb.subskrypcje.subscribeKlient(rtiamb);
+
         //interakcje
         fedamb.subskrypcje.subscribeRozpoczecieSymulacji(rtiamb);
         fedamb.subskrypcje.subscribeZakoczenieSymulacji(rtiamb);

@@ -1,5 +1,6 @@
 package federacje.kasa;
 
+import Interactions.WejscieDoKolejki;
 import Interactions.ZakonczanieObslugiKlienta;
 import common.AmbasadorAbstract;
 import common.ExternalEventAbstract;
@@ -10,6 +11,7 @@ import hla.rti.SuppliedAttributes;
 import hla.rti.SuppliedParameters;
 import hla.rti.jlc.RtiFactoryFactory;
 import objects.Kasa;
+import objects.ListaKlientow;
 
 import java.util.Collections;
 
@@ -17,7 +19,7 @@ import java.util.Collections;
  * Created by Marcin on 22.06.2017.
  */
 public class KasaFederate extends FederateAbstract {
-    public int PoczatkowaLiczbaKas=10;
+    public int PoczatkowaLiczbaKas=0;
     public static final String federateName = "KasaFederate";
     public AmbasadorAbstract fedamb;
 
@@ -48,6 +50,26 @@ public class KasaFederate extends FederateAbstract {
                             case UruchomNowaKase:
                                 log("Odebrano zadanie uruchomienia kasy");
                                 UruchomNowaKase();
+                                break;
+                            case Klient:
+
+                                if(kliencjiWSklepie.addorChangeIfExist(event.getKlient()))
+                                {
+                                    log("Odebrano nowego klienta: "+event.getKlient());
+                                }
+                                else
+                                {
+                                    log("Odebrano aktualizacje klienta: "+event.getKlient());
+                                }
+                                break;
+                            case WejscieDoKolejki:
+                                WejscieDoKolejki kolejk= event.getWejscieDoKolejki();
+                                Kasa prawislowa= Kasa.FindbyID(kasy,kolejk.NumerKasy);
+                                prawislowa.Dlugosc++;
+                                if(prawislowa.Dlugosc==prawislowa.kolejka.WielkoscMax)
+                                    prawislowa.CzyOtwarta=false;
+                                sendKasaToRTI(prawislowa.hendKasa,prawislowa);
+                                log("Klient:" +kolejk.IDKlienta+" wszedl do kasy "+kolejk.NumerKasy);
                                 break;
                         }
                     } catch (Exception e) {
@@ -84,7 +106,7 @@ public class KasaFederate extends FederateAbstract {
     private int IteratorKasy = 1;
     private void UruchomNowaKase() throws RTIexception {
         int hendKasa=registerKasa();
-        Kasa tmp = new Kasa(IteratorKasy++, 0, false, true);
+        Kasa tmp = new Kasa(IteratorKasy++, 0, false, true,hendKasa);
         kasy.add(tmp);
         sendKasaToRTI(hendKasa,tmp);
 
