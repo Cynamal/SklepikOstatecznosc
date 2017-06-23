@@ -197,4 +197,13 @@ public class FederateAbstract  {
             concurrentAccessAttempted.printStackTrace();
         }
     }
+    public void czekajNAGUI(AmbasadorAbstract fedamb)
+    {
+        try {
+            advanceTime(1.0,fedamb);
+            isRunning=true;
+        } catch (RTIexception rtIexception) {
+            rtIexception.printStackTrace();
+        }
+    }
 }

@@ -20,15 +20,10 @@ public class KasaFederate extends FederateAbstract {
         fedamb = new AmbasadorAbstract();
         CommonrunFederate(federateName,fedamb);
         publishAndSubscribe();
-        try {
-            zakonczObslugeKlienta(new ZakonczanieObslugiKlienta(2,10),1.0);
-        } catch (RTIexception rtIexception) {
-            rtIexception.printStackTrace();
-        }
-        try {
-            advanceTime(1.0,fedamb);
-        } catch (RTIexception rtIexception) {
-            rtIexception.printStackTrace();
+        czekajNAGUI(fedamb);
+        while(this.isRunning)
+        {
+
         }
     }
     public static void main(String[] args) {
