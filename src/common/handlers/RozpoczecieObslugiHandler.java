@@ -15,7 +15,7 @@ public class RozpoczecieObslugiHandler {
 
     public RozpoczecieObslugiHandler(RTIambassador rtiamb) throws NameNotFound, FederateNotExecutionMember, RTIinternalError {
         RozpoczecieObslugiHandler = rtiamb.getInteractionClassHandle("HLAinteractionRoot.RozpoczecieObslugi");
-        //    IDKlientaHandler 			= rtiamb.getParameterHandle("IDKlienta", ZakonczanieObslugiKlientaHandle );
+         //   IDKlientaHandler 			= rtiamb.getParameterHandle("IDKlienta", ZakonczanieObslugiKlientaHandle );
         //     CzasObslugiHandler 			= rtiamb.getParameterHandle("CzasObslugi", ZakonczanieObslugiKlientaHandle );
     }
 

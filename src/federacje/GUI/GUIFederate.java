@@ -1,9 +1,13 @@
 package federacje.GUI;
 
 import common.AmbasadorAbstract;
+import common.ExternalEventAbstract;
 import common.FederateAbstract;
+import hla.rti.RTIexception;
 import objects.Kasa;
+import objects.Klient;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -27,6 +31,35 @@ public class GUIFederate extends FederateAbstract {
         fedamb = new AmbasadorAbstract();
         CommonrunFederate(federateName,fedamb);
         publishAndSubscribe();
+        try {
+            advanceTime(1.0,fedamb);
+        } catch (RTIexception rtIexception) {
+            rtIexception.printStackTrace();
+        }
+        if (fedamb.externalEvents.size() > 0) {
+            Collections.sort(fedamb.externalEvents, new ExternalEventAbstract.ExternalEventComparator());
+            for (ExternalEventAbstract event : fedamb.externalEvents) {
+                try {
+
+
+                    // System.out.println("w for");
+                    switch (event.getEventType()) {
+                        case Klient:
+                                System.out.println("Dodano klienta: " + event.getKlient());
+                            break;
+                        case Kasa:
+                            System.out.println("Dodano kase: " + event.getKasa());
+                            break;
+                        case ZakonczanieObslugiKlienta:
+                            System.out.println("Zakonczenie obslugi klienta: " + event.getZakonczanieObslugiKlienta());
+                            break;
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+
+        }
     }
 
     private void publishAndSubscribe() {

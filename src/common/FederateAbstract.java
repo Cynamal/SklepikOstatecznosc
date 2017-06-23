@@ -45,7 +45,7 @@ public class FederateAbstract  {
     }
 
 
-    private LogicalTime convertTime(double time) {
+    public LogicalTime convertTime(double time) {
         return new DoubleTime(time);
     }
     protected LogicalTimeInterval convertInterval(double time) {

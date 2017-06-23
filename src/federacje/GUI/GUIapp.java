@@ -41,7 +41,7 @@ public class GUIapp extends Application {
 
 
                federate.CheckStartedLock.lock();
-                federate.Started=false;
+                federate.fedamb.Started=false;
                 federate.CheckStartedLock.unlock();
                 StopSym.setVisible(false);
             }
@@ -53,7 +53,7 @@ public class GUIapp extends Application {
             @Override
             public void handle(ActionEvent event) {
                 federate.CheckStartedLock.lock();
-                federate.Started=true;
+                federate.fedamb.Started=true;
                 federate.CheckStartedLock.unlock();
 
                 StopSym.setVisible(true);

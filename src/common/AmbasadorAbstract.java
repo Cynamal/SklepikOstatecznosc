@@ -1,5 +1,6 @@
 package common;
 
+import Interactions.ZakonczanieObslugiKlienta;
 import hla.rti.*;
 import hla.rti.jlc.EncodingHelpers;
 import hla.rti.jlc.NullFederateAmbassador;
@@ -28,7 +29,7 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
     public boolean isAdvancing = false;
     public boolean isRunning=true;
 
-    protected ArrayList<ExternalEventAbstract> externalEvents = new ArrayList<>();
+    public ArrayList<ExternalEventAbstract> externalEvents = new ArrayList<>();
     private java.util.List<Map.Entry<String, Integer>> pairList = new java.util.ArrayList<>();
     private static void log (String x){
         System.out.println(x);
@@ -106,19 +107,52 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
                                    byte[] tag,
                                    LogicalTime theTime,
                                    EventRetractionHandle eventRetractionHandle) {
+
         StringBuilder builder = new StringBuilder("Interaction Received:");
+        ExternalEventAbstract externalEvent = new ExternalEventAbstract();
+        if (theTime != null)
+            builder.append(", time=" + convertTime(theTime));
 
 
+        try
+        {
+            if(interactionClass ==subskrypcje.zakonczenieObslugiKlientaHandler.getZakonczenieObslugiKlientaHandler()) {
+                int IDKlienta = EncodingHelpers.decodeInt(theInteraction.getValue(0));
+                int CZasObslugi = EncodingHelpers.decodeInt(theInteraction.getValue(1));
+                double time = convertTime(theTime);
+                externalEvent.ZakonczanieObslugiKlientaEvent(new ZakonczanieObslugiKlienta(IDKlienta,CZasObslugi),time);
+
+                builder.append("Odebrano interakcje zakonczenia obslugi klienta\n");
+
+                this.externalEvents.add(externalEvent);
+            }
+        } catch (Exception e)
+        {
+
+        }
+
+        try
+        {
         if(interactionClass ==subskrypcje.rozpoczecieSymulacjiHandler.getRozpoczecieSymulacjiHandler()) {
 
             builder.append("Start Symulacji z gui\n");
             isRunning=true;
 
         }
+        } catch (Exception e)
+        {
+
+        }
+        try
+        {
         if(interactionClass ==subskrypcje.zakonczenieSymulacjiHandler.getZakonczenieSymulacjiHandler()) {
 
             builder.append("Zakonczenie symulacji z gui\n");
             isRunning=false;
+        }
+        } catch (Exception e)
+        {
+
         }
         log(builder.toString());
         //#TODO

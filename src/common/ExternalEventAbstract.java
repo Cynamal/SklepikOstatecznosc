@@ -1,5 +1,6 @@
 package common;
 
+import Interactions.*;
 import objects.Kasa;
 import objects.Klient;
 
@@ -13,10 +14,19 @@ public class ExternalEventAbstract {
 
     private Klient k;
     private Kasa kas;
-
+    private ZakonczanieObslugiKlienta zako;
     private EventType eventType;
     private Double time;
+    public void ZakonczanieObslugiKlientaEvent(ZakonczanieObslugiKlienta zako, Double time)
+    {
+        this.zako = zako;
+        this.eventType = EventType.ZakonczanieObslugiKlienta;
+        this.time = time;
+    }
 
+    public ZakonczanieObslugiKlienta getZakonczanieObslugiKlienta() {
+        return zako;
+    }
 
     public void KasaEvent(Kasa kas, Double time) {
         this.kas = kas;
