@@ -132,7 +132,7 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
         LinkedList<Kasa> ret=new LinkedList<>();
         for (Kasa tmp: kasy
                 ) {
-            if(!tmp.CzyPelna&&MaxSizeofQiue>=tmp.kolejka.size())
+            if(!tmp.CzyPelna||MaxSizeofQiue<=tmp.kolejka.size())
             {
                 ret.add(tmp);
             }
