@@ -108,6 +108,8 @@ public class GUIapp extends Application {
         primaryStage.show();
         rewriteControls();
     }
+    ObservableList<String> oldItems= FXCollections.observableArrayList(Kasa.ToStringList(federate.kasy));
+    String oldLog=dzialanieLog;
     public void rewriteControls()
     {
         Thread tr= new Thread() {
@@ -118,12 +120,26 @@ public class GUIapp extends Application {
 
                         @Override
                         public void run() {
+                            if(federate.isRunning)
+                            {
+                                if(!oldLog.equals(dzialanieLog))
+                                {
+                                    oldLog=dzialanieLog;
+                                    Konsola.setText(dzialanieLog);
+
+                                }
+
+                                oldItems= FXCollections.observableArrayList(Kasa.ToStringList(federate.kasy));
+                                IPLIst.setItems(oldItems);
+                            }
 
 
 
-                            ObservableList<String> items = FXCollections.observableArrayList(Kasa.ToStringList(federate.kasy));
-                            IPLIst.setItems(items);
-                            Konsola.setText(dzialanieLog);
+
+
+                            //ObservableList<String> items = FXCollections.observableArrayList(Kasa.ToStringList(federate.kasy));
+
+
                             //Konsola.setText(logS);
                         }
                     });
