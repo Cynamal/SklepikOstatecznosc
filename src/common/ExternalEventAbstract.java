@@ -9,7 +9,7 @@ import java.util.Comparator;
  * Created by Marcin on 22.06.2017.
  */
 public class ExternalEventAbstract {
-    public enum EventType {Kasa, Klient}
+    public enum EventType {Kasa, Klient,ZakonczanieObslugiKlienta}
 
     private Klient k;
     private Kasa kas;

@@ -100,13 +100,7 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
         this.federateTime = convertTime(theTime);
         this.isAdvancing = false;
     }
-    public static boolean intequalifnullfalse(int one,int two)
-    {
-     //   if(one==null) return false;
-      //  if(two==null) return false;
-        //#TODO dokonczyc implementacje
-        return false;
-    }
+
     public void receiveInteraction(int interactionClass,
                                    ReceivedInteraction theInteraction,
                                    byte[] tag,
