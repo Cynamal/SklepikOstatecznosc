@@ -203,7 +203,7 @@ public class FederateAbstract  {
             concurrentAccessAttempted.printStackTrace();
         }
     }
-    private byte[] generateTag() {
+    public byte[] generateTag() {
         return ("" + System.currentTimeMillis()).getBytes();
     }
     public void czekajNAGUI(AmbasadorAbstract fedamb)

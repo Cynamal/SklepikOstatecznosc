@@ -5,6 +5,10 @@ import common.ExternalEventAbstract;
 import common.FederateAbstract;
 import federacje.kasa.KasaFederate;
 import hla.rti.RTIexception;
+import statistic.Colections.ZadaniaUruchomieniaKasy;
+import statistic.Colections.ZakonczeniaObslugiKliena;
+import statistic.Obj.EvZakonczenieObslugiKlienta;
+import statistic.Obj.ZadanieUruchomieniaKasy;
 
 import java.util.Collections;
 
@@ -12,6 +16,10 @@ import java.util.Collections;
  * Created by Marcin on 22.06.2017.
  */
 public class StatystykaFederate extends FederateAbstract {
+    //Statystyki----------
+    ZadaniaUruchomieniaKasy zadaniaUruchomieniaKasy=new ZadaniaUruchomieniaKasy();
+    ZakonczeniaObslugiKliena zakonczeniaObslugiKliena=new ZakonczeniaObslugiKliena();
+    //--------------------
     public static final String federateName = "StatystykaFederate";
     public AmbasadorAbstract fedamb;
 
@@ -37,9 +45,12 @@ public class StatystykaFederate extends FederateAbstract {
                                 break;
                             case ZakonczanieObslugiKlienta:
                                 log("Zakonczenie obslugi klienta: " + event.getZakonczanieObslugiKlienta());
+                                zakonczeniaObslugiKliena.add(new EvZakonczenieObslugiKlienta(event.getTime(),event.getZakonczanieObslugiKlienta()));
                                 break;
                             case UruchomNowaKase:
                                 log("Odebrano zadanie uruchomienia kasy");
+                                zadaniaUruchomieniaKasy.add(new ZadanieUruchomieniaKasy(event.getTime()));
+
                                 break;
                         }
                     } catch (Exception e) {
