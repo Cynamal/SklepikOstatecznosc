@@ -2,6 +2,7 @@ package federacje.klient;
 
 import Interactions.RozpoczecieObslugi;
 import Interactions.WejscieDoKolejki;
+import Interactions.ZakonczanieObslugiKlienta;
 import common.AmbasadorAbstract;
 import common.ExternalEventAbstract;
 import common.FederateAbstract;
@@ -49,8 +50,16 @@ public class KlientFederate extends FederateAbstract {
                                 break;
                             case RozpoczecieObslugi:
                                 RozpoczecieObslugi rozpoczecieObslugi= event.getRozpoczecieObslugi();
-
-                                //UpdateQue(rozpoczecieObslugi.NumerKasy); TUTAJ UPDATE JAK OBSLUGUJE
+                                Kasa kasa = kasy.get(rozpoczecieObslugi.NumerKasy);
+                                Klient temp = kliencjiWSklepie.get(kliencjiWSklepie.getIndexByID(rozpoczecieObslugi.IDKlienta));
+                                kasa.kolejkaDOKASI.remove(temp);
+                                break;
+                            case ZakonczanieObslugiKlienta:
+                                ZakonczanieObslugiKlienta zak = event.getZakonczanieObslugiKlienta();
+                                log("Obsluzono klienta "+zak.IDKlienta+" i wyszedl");
+                                int indeksKlienta = kliencjiWSklepie.getIndexByID(zak.IDKlienta);
+                                Klient klient = kliencjiWSklepie.GetAndRemove(indeksKlienta);
+                                super.deleteObject(klient.hendler);
                                 break;
                         }
                     } catch (Exception e) {
@@ -86,7 +95,7 @@ public class KlientFederate extends FederateAbstract {
         }
     }
     private void wchodzenieDokolejkiKasi() {
-        ListaKlientow DoWywalenia= new ListaKlientow(Integer.MAX_VALUE);
+        //ListaKlientow DoWywalenia= new ListaKlientow(Integer.MAX_VALUE);
         for (Klient kl: kliencjiWSklepie) {
             if(kl.czasZakonczeniaZakupow==fedamb.federateTime) {
                 LinkedList<Kasa>aktywne= Kasa.getActiveOnlykasi(kasy);
