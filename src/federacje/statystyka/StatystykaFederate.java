@@ -24,6 +24,7 @@ import java.util.LinkedList;
  */
 public class StatystykaFederate extends FederateAbstract {
     //Statystyki----------
+    ListSredniCzasOczekiwania listSredniCzasOczekiwania=new ListSredniCzasOczekiwania();
     ZadaniaUruchomieniaKasy zadaniaUruchomieniaKasy=new ZadaniaUruchomieniaKasy();
     ZakonczeniaObslugiKliena zakonczeniaObslugiKliena=new ZakonczeniaObslugiKliena();
     UpdateKasaList updateKasaList=new UpdateKasaList();
@@ -90,7 +91,7 @@ public class StatystykaFederate extends FederateAbstract {
             System.out.println("Srednia ilosc gotowki: " + Math.round(iloscGotowki/liczbaKlientowWSklepie));
         if(liczbaKlientowWKolejce!=0)
             System.out.println("Sredni czas zakupow: " + Math.round(czasZakupow/liczbaKlientowWKolejce));
-        System.out.println("Sredni czas oczekiwania: " );
+        System.out.println("Sredni czas oczekiwania: " +listSredniCzasOczekiwania.ObliczSredni());
         if(liczbaObsluzonych!=0)
             System.out.println("Sredni czas obslugi: " + Math.round(czasObslugi/liczbaObsluzonych));
         if(liczbaPrzerw!=0)
@@ -146,6 +147,7 @@ public class StatystykaFederate extends FederateAbstract {
                                 wejsciaDoKolejki.add(new EvWejscieDoKolejki(event.getTime(), wej));
                                 liczbaKlientowWKolejce++;
                                 czasZakupow+=wej.CzasZakupow;
+                                listSredniCzasOczekiwania.add(new SredniCzasOczekiwania(wej.IDKlienta,fedamb.federateTime));
                                 break;
                             case RozpocznijPrzerwe:
                                 log("Rozpocznij przerwe: "+event.getRozpocznijPrzerwe());
@@ -153,10 +155,14 @@ public class StatystykaFederate extends FederateAbstract {
                                 break;
                             case RozpoczecieObslugi:
                                 log("Rozpoczecie obslugi: "+event.getRozpoczecieObslugi());
+                                RozpoczecieObslugi roz= event.getRozpoczecieObslugi();
+
+                                listSredniCzasOczekiwania.getbyIDKlient(roz.IDKlienta).CzasWyjsciaZKolejki=fedamb.federateTime;
                                 rozpoczeciaOblugi.add(new EvRozpoczecieObslugi(event.getTime(), event.getRozpoczecieObslugi()));
                                 break;
                             case ZakoczenieSymulacji:
                                 log("Odebrano zakonczenie symulacji");
+
 
                                 this.isRunning=false;
                                 break;
