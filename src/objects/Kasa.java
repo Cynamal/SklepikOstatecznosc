@@ -301,7 +301,7 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
         {
             obsluga=" ID klienta: "+idKlientaOblugiwanego;
         }
-
+        if(Dlugosc==0) obsluga="";
 
         return "Kasa o numerze: "+NumerKasy+" Dlugosc kolejki: "+Dlugosc+" Status: "+otwarta+pelna+obsluga ;
     }
