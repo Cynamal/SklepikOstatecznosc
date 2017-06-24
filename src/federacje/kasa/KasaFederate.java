@@ -111,7 +111,7 @@ public class KasaFederate extends FederateAbstract {
                int indexwLisiceklient= kliencjiWSklepie.mygetFirst(kas.NumerKasy);
                if(indexwLisiceklient!=-1)
                {
-                   int czasOczekiwania=6;
+                   int czasOczekiwania=1;
                    kas.czyObsluguje=true;
                    kas.czasRozpoczeciaObslugi=fedamb.federateTime;
                    kas.czasZakonczeniaObslugi=fedamb.federateTime+czasOczekiwania;
@@ -122,7 +122,18 @@ public class KasaFederate extends FederateAbstract {
                    LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
                    kas.idKlientaOblugiwanego=najlepszy.IDKlienta;
                    rtiamb.sendInteraction(fedamb.publikacje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler(), attributes, "tag".getBytes(), time );
-                   //#TODO dodac uwuanie klienta
+                   //kliencjiWSklepie.remove(najlepszy);
+                    kliencjiWSklepie.RemoveByID(najlepszy.IDKlienta);
+                   kas.Dlugosc--;
+                   kas.CzyPelna=false;
+                   sendKasaToRTI(kas.hendKasa,kas);
+                   for (Klient kl:kliencjiWSklepie
+                           ) {
+                       System.out.print("kl222: "+kl);
+                   }
+                   System.out.println();
+                   log("Rozpoczeto obsluge:"+najlepszy.IDKlienta+" kasa:"+kas.NumerKasy);
+
                }
 
 
@@ -136,6 +147,7 @@ public class KasaFederate extends FederateAbstract {
                     SuppliedParameters attributes=zakonczanieObslugiKlienta.getRTIAtributes(fedamb);
                     LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
                     rtiamb.sendInteraction(fedamb.publikacje.zakonczenieObslugiKlientaHandler.getZakonczenieObslugiKlientaHandler(), attributes, "tag".getBytes(), time );
+                    log("Zakonczono obsluge:"+kas.idKlientaOblugiwanego+" kasa:"+kas.NumerKasy+" czas obslugi:"+czas);
                 }
             }
         }
@@ -176,12 +188,13 @@ public class KasaFederate extends FederateAbstract {
         //interakcje
         fedamb.publikacje.publishZakonczenieObslugiKlienta(rtiamb);
         fedamb.publikacje.publishZakoczeniePrzerwy(rtiamb);
+        fedamb.publikacje.publishRozpoczecieObslugi(rtiamb);
         //obiekty
         fedamb.subskrypcje.subscribeKlient(rtiamb);
         //interakcje
         fedamb.subskrypcje.subscribeUruchomNowaKase(rtiamb);
         fedamb.subskrypcje.subscribeRozpocznijPrzerwe(rtiamb);
-        fedamb.subskrypcje.subscribeRozpoczecieObslugi(rtiamb);
+
         fedamb.subskrypcje.subscribeWejscieDoKolejki(rtiamb);
         fedamb.subskrypcje.subscribeRozpoczecieSymulacji(rtiamb);
         fedamb.subskrypcje.subscribeZakoczenieSymulacji(rtiamb);

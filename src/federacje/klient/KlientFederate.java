@@ -1,5 +1,6 @@
 package federacje.klient;
 
+import Interactions.RozpoczecieObslugi;
 import Interactions.WejscieDoKolejki;
 import common.AmbasadorAbstract;
 import common.ExternalEventAbstract;
@@ -48,6 +49,10 @@ public class KlientFederate extends FederateAbstract {
                                     log("Zaktualizowano kase:"+event.getKasa());
 
                                 break;
+                            case RozpoczecieObslugi:
+                                RozpoczecieObslugi rozpoczecieObslugi= event.getRozpoczecieObslugi();
+                                UpdateQue(rozpoczecieObslugi.NumerKasy);
+                                break;
                         }
                     } catch (Exception e) {
 
@@ -62,6 +67,23 @@ public class KlientFederate extends FederateAbstract {
             } catch (RTIexception rtIexception) {
                 rtIexception.printStackTrace();
             }
+        }
+    }
+
+    private void UpdateQue(int numerKasy) {
+        try {
+            Kasa kasa= Kasa.FindbyID(kasy,numerKasy);
+           int idKlientDoUsuniecia= kasa.kolejka.mygetFirst();
+           Klient klientDoUsuniecia=kasa.kolejka.get(idKlientDoUsuniecia);
+            deleteObject(klientDoUsuniecia.hendler);
+           kasa.kolejka.remove(klientDoUsuniecia);
+            for (Klient kl: kasa.kolejka
+                 ) {
+                kl.NumerWKolejce--;
+                UpdateKlienttoRTI(kl.hendler,kl);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -163,13 +185,13 @@ public class KlientFederate extends FederateAbstract {
         fedamb.publikacje.publishKlient(rtiamb);
         //interakcje
         fedamb.publikacje.publishWejscieDoKolejki(rtiamb);
-        fedamb.publikacje.publishRozpoczecieObslugi(rtiamb);
+
         // obiekty
         fedamb.subskrypcje.subscribeKasa(rtiamb);
         //interakcje
         fedamb.subskrypcje.subscribeZakonczanieObslugiKlienta(rtiamb);
         fedamb.subskrypcje.subscribeRozpoczecieSymulacji(rtiamb);
         fedamb.subskrypcje.subscribeZakoczenieSymulacji(rtiamb);
-
+        fedamb.subskrypcje.subscribeRozpoczecieObslugi(rtiamb);
     }
 }

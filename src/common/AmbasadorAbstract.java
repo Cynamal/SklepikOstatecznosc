@@ -212,6 +212,18 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
     {
         reflectAttributeValues(theObject, theAttributes, tag, null, null);
     }
+    public void removeObjectInstance( int theObject, byte[] userSuppliedTag )
+    {
+        log( "Object Removed: handle=" + theObject );
+    }
+
+    public void removeObjectInstance( int theObject,
+                                      byte[] userSuppliedTag,
+                                      LogicalTime theTime,
+                                      EventRetractionHandle retractionHandle )
+    {
+        log( "Object Removed: handle=" + theObject );
+    }
     public void discoverObjectInstance ( int theObject,
                                          int theObjectClass,
                                          String objectName )
@@ -272,7 +284,7 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
                     }
                 }
             }
-            log("" + builder);
+          //  log("" + builder);
         }
 
 

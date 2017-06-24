@@ -111,6 +111,15 @@ public class ListaKlientow extends LinkedList<Klient> {
 
         return index;
     }
+    public void RemoveByID(int idKlienta)
+    {
+        int index=-1;
+        for(int i =0;i<this.size();i++)
+        {
+            if(this.get(i).IDKlienta==idKlienta) index=i;
+        }
+        if(index!=-1) remove(index);
+    }
     public Klient GetAndRemove(int index)
     {
         Klient tmp=this.get(index);

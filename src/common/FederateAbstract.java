@@ -79,7 +79,10 @@ public class FederateAbstract  {
             timeConstrainedAlreadyEnabled.printStackTrace();
         }
     }
-
+    public void deleteObject( int handle ) throws RTIexception
+    {
+        rtiamb.deleteObjectInstance( handle, generateTag() );
+    }
     /**
      * Czesc wspolna dla uruchamiania federata
      */
