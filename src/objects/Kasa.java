@@ -131,6 +131,18 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
         }
         return ret;
     }
+
+    public static boolean SprawdzCZyWszytkiePelne(LinkedList<Kasa> kasy)
+    {
+        if(kasy.size()==0) return true;
+
+        for (Kasa tmp: kasy
+                ) {
+            System.out.print("TMPDEB "+tmp);
+            if(!tmp.CzyPelna) return false;
+        }
+        return true;
+    }
     /**
      * Pobiera tylko klasy aktywne z listy kas
      * @param kasy Lista wszystkich kas w systemie
