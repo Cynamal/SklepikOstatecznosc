@@ -141,6 +141,8 @@ public class KasaFederate extends FederateAbstract {
             }
         }
         System.out.print("Zamykanie");
+        ogloszeniePunktuSynchronizacjiWyjscia(fedamb);
+        osiagnieciePunktuSynchronizacjiWyjscia(fedamb);
     }
     private void sendZakonczeniePrzerwy(PrzerwaKasy przerwaKasy)throws RTIexception
     {

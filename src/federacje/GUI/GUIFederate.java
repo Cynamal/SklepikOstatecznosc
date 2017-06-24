@@ -168,8 +168,8 @@ public class GUIFederate extends FederateAbstract {
             rtIexception.printStackTrace();
         }
         System.out.print("Zamykanie");
-
-
+        ogloszeniePunktuSynchronizacjiWyjscia(fedamb);
+        osiagnieciePunktuSynchronizacjiWyjscia(fedamb);
     }
 
     public void dodawanieKlientow(Klient klient){

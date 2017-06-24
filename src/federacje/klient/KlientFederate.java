@@ -90,6 +90,8 @@ public class KlientFederate extends FederateAbstract {
             }
         }
         System.out.print("Zamykanie");
+        ogloszeniePunktuSynchronizacjiWyjscia(fedamb);
+        osiagnieciePunktuSynchronizacjiWyjscia(fedamb);
     }
 
     private void UpdateQue(int numerKasy) {
