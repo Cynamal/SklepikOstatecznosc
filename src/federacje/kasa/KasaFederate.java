@@ -28,6 +28,7 @@ public class KasaFederate extends FederateAbstract {
     public static final String federateName = "KasaFederate";
     public AmbasadorAbstract fedamb;
     public PrzerwaKasy przerwaKasy;
+    public boolean czasNaPrzerwe = false;
     public void runFederate(){
         fedamb = new AmbasadorAbstract();
         CommonrunFederate(federateName,fedamb);
@@ -93,7 +94,11 @@ public class KasaFederate extends FederateAbstract {
                                 RozpocznijPrzerwe przewe=event.getRozpocznijPrzerwe();
                                 Kasa kasaNAPrzerwe= Kasa.FindbyID(kasy,przewe.NumerKasy);
                                 kasaNAPrzerwe.CzyOtwarta=false;
-                                przerwaKasy=new PrzerwaKasy(kasaNAPrzerwe,20 + (int)(Math.random() * 40),fedamb.federateTime);
+                                Random rand2 = new Random();
+                                int czasprzer = 50 + rand2.nextInt(65);
+                                //przerwaKasy=new PrzerwaKasy(kasaNAPrzerwe,20 + (int)(Math.random() * 40),fedamb.federateTime);
+                                przerwaKasy=new PrzerwaKasy(kasaNAPrzerwe,czasprzer,fedamb.federateTime);
+                                czasNaPrzerwe=true;
                                 sendKasaToRTI(kasaNAPrzerwe.hendKasa,kasaNAPrzerwe);
                                 break;
                         }
@@ -103,7 +108,7 @@ public class KasaFederate extends FederateAbstract {
                 }
                 fedamb.externalEvents.clear();
             }
-            if(przerwaKasy!=null)
+            if(czasNaPrzerwe)
             {
                 if(przerwaKasy.kasa.Dlugosc==0&&przerwaKasy.KoniecPrzerwy==-1)
                     przerwaKasy.zakonczenieObslugiOstatniego(fedamb.federateTime);
@@ -114,6 +119,7 @@ public class KasaFederate extends FederateAbstract {
                         sendKasaToRTI(przerwaKasy.kasa.hendKasa,przerwaKasy.kasa);
                         sendZakonczeniePrzerwy(przerwaKasy);
                         przerwaKasy=null;
+                        czasNaPrzerwe=false;
                     } catch (RTIexception rtIexception) {
                         rtIexception.printStackTrace();
                     }

@@ -23,7 +23,7 @@ public class PrzerwaKasy {
     public boolean czyKoniecPrzerwy(double time)
     {
         String z= "false";
-        if(time>=KoniecPrzerwy)  z= "true";
+        if(time==KoniecPrzerwy)  z= "true";
         System.out.println("Debugff01 time:"+time+"Koniec przerwy "+KoniecPrzerwy+"Co zwroci:"+z);
         if(KoniecPrzerwy==-1)return false;
         return time>=KoniecPrzerwy;
