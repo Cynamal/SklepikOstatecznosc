@@ -61,6 +61,9 @@ public class KlientFederate extends FederateAbstract {
                                 Klient klient = kliencjiWSklepie.GetAndRemove(indeksKlienta);
                                 super.deleteObject(klient.hendler);
                                 break;
+                            case ZakoczenieSymulacji:
+                                this.isRunning=false;
+                                break;
                         }
                     } catch (Exception e) {
 
@@ -68,14 +71,18 @@ public class KlientFederate extends FederateAbstract {
                 }
                 fedamb.externalEvents.clear();
             }
+            if(this.isRunning)
             dodajKlienta();
+            if(this.isRunning)
             wchodzenieDokolejkiKasi();
             try {
+                if(this.isRunning)
                 advanceTime(1.0,fedamb);
             } catch (RTIexception rtIexception) {
                 rtIexception.printStackTrace();
             }
         }
+        System.out.print("Zamykanie");
     }
 
     private void UpdateQue(int numerKasy) {
@@ -198,7 +205,7 @@ public class KlientFederate extends FederateAbstract {
               int gotowka=100 + (int)(Math.random() * maxCash);
               int klienti=  registerKlient();
               int czas=gotowka/10;
-              Klient tmp=new Klient (KlientNextID++,false,-1,-1,gotowka,1+czas+fedamb.federateTime,klienti,fedamb.federateTime);
+              Klient tmp=new Klient (KlientNextID++,MaszynaLosujacaUprzywilejowanych.Los(),-1,-1,gotowka,1+czas+fedamb.federateTime,klienti,fedamb.federateTime);
               kliencjiWSklepie.add(tmp);
               UpdateKlienttoRTI(klienti, tmp);
 

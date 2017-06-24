@@ -137,7 +137,7 @@ public class StatystykaFederate extends FederateAbstract {
                                 break;
                             case ZakoczenieSymulacji:
                                 log("Odebrano zakonczenie symulacji");
-                                wypisanieStatystyk();
+
                                 this.isRunning=false;
                                 break;
                             case RozpoczecieSymulacji:
@@ -148,10 +148,22 @@ public class StatystykaFederate extends FederateAbstract {
                 fedamb.externalEvents.clear();
             }
             try {
+                if(this.isRunning)
                 advanceTime(1.0,fedamb);
             } catch (RTIexception rtIexception) {
                 rtIexception.printStackTrace();
             }
+
+
+        }
+        System.out.println("Konczenie symulacji");
+        try
+        {
+            if(!this.isRunning)
+                wypisanieStatystyk();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
     public static void main(String[] args) {

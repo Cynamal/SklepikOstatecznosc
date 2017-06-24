@@ -47,6 +47,9 @@ public class WlascicielFederate extends FederateAbstract {
                                 else
                                     log("Zaktualizowano kase:"+event.getKasa());
                                 break;
+                            case ZakoczenieSymulacji:
+                                this.isRunning=false;
+                                break;
 
                         }
                     } catch (Exception e) {
@@ -55,6 +58,7 @@ public class WlascicielFederate extends FederateAbstract {
                 }
                 fedamb.externalEvents.clear();
             }
+            if(this.isRunning)
             if(!wyslanoZadanieDodaniaNowej)
             {
                 OtworzKaseJezeliKonieczne();
@@ -63,11 +67,13 @@ public class WlascicielFederate extends FederateAbstract {
 
 
             try {
+                if(this.isRunning)
                 advanceTime(1.0,fedamb);
             } catch (RTIexception rtIexception) {
                 rtIexception.printStackTrace();
             }
         }
+        System.out.print("Zamykanie");
     }
     public static void main(String[] args) {
         new WlascicielFederate().runFederate();

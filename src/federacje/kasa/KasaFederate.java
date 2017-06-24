@@ -86,6 +86,9 @@ public class KasaFederate extends FederateAbstract {
                                 System.out.println("Klient ID "+temp.IDKlienta+" numer kolejki "+temp.NumerKolejki+" numer w kolejce "+temp.NumerWKolejce);
                                 log("Klient:" +kolejk.IDKlienta+" wszedl do kasy "+kolejk.NumerKasy);
                                 break;
+                            case ZakoczenieSymulacji:
+                                this.isRunning=false;
+                                break;
                         }
                     } catch (Exception e) {
 
@@ -95,17 +98,20 @@ public class KasaFederate extends FederateAbstract {
             }
 
             try {
+                if(this.isRunning)
                 RozpocznijObslugelubZakoncz();
             } catch (RTIexception rtIexception) {
                 rtIexception.printStackTrace();
             }
 
             try {
+                if(this.isRunning)
                 advanceTime(1.0,fedamb);
             } catch (RTIexception rtIexception) {
                 rtIexception.printStackTrace();
             }
         }
+        System.out.print("Zamykanie");
     }
 
     private void rozpocznijObslugeKlienta(RozpoczecieObslugi rozp,double timeStep)throws RTIexception

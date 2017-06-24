@@ -74,7 +74,7 @@ public class GUIFederate extends FederateAbstract {
             rtIexception.printStackTrace();
         }
 
-        while(this.isRunning) {
+        while(fedamb.Started) {
             if (fedamb.externalEvents.size() > 0) {
                 Collections.sort(fedamb.externalEvents, new ExternalEventAbstract.ExternalEventComparator());
                 for (ExternalEventAbstract event : fedamb.externalEvents) {
@@ -124,6 +124,7 @@ public class GUIFederate extends FederateAbstract {
                                 ZakoczeniePrzerwy zap = event.getZakoczeniePrzerwy();
                                 logowanieDzialania("Kasa o numerze "+zap.NumerKasy+" zakonczyla przerwe. Czas przerwy wynosil "+zap.CzasPrzerwy);
                                 break;
+
                         }
                     } catch (Exception e) {
 
@@ -138,6 +139,25 @@ public class GUIFederate extends FederateAbstract {
                 rtIexception.printStackTrace();
             }
         }
+        try {
+            wyslijZadanieZakonczeniaSymulacji(fedamb.federateTime+1.0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            advanceTime(1.0,fedamb);
+        } catch (RTIexception rtIexception) {
+            rtIexception.printStackTrace();
+        }
+        System.out.print("Zamykanie");
+
+
+    }
+    private void wyslijZadanieZakonczeniaSymulacji(double timeStep) throws Exception {
+        SuppliedParameters parameters =
+                RtiFactoryFactory.getRtiFactory().createSuppliedParameters();
+        LogicalTime time = convertTime( timeStep );
+        rtiamb.sendInteraction(fedamb.publikacje.zakonczenieSymulacjiHandler.getZakonczenieSymulacjiHandler(), parameters, "tag".getBytes(), time );
     }
     private void wyslijZadanieRozpoczeciaSymulacji(double timeStep) throws Exception{
         SuppliedParameters parameters =
