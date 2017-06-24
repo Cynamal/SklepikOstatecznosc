@@ -95,13 +95,14 @@ public class GUIapp extends Application {
         StartSetHendler(primaryStage);
         StackPane root = new StackPane();
         GridPane grid = new GridPane();
-
+        Konsola.setMinHeight(400);
+        Konsola.setMinWidth(600);
         grid.add(StartSym,1,5);
         grid.add(StopSym,0,5);
         IPLIst.setMinSize(20,120);
         grid.add(IPLIst, 0, 6, 2, 6);
-        grid.add(Konsola,0,30,2,30);
-        primaryStage.setScene(new Scene(root, 500, 650));
+        grid.add(Konsola,0,30,2,60);
+        primaryStage.setScene(new Scene(root, 600, 900));
         root.getChildren().add(grid);
         StopSym.setVisible(false);
         StartSym.setVisible(true);
