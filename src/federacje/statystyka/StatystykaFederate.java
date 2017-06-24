@@ -63,19 +63,27 @@ public class StatystykaFederate extends FederateAbstract {
 
     public void liczenieKlientowWSklepie(Klient klient){
         if(klient.NumerKolejki == -1){
-            if(listaKlientow.size()==0)
+            if(listaKlientow.size()==0){
+                liczbaKlientowWSklepie++;
+                iloscGotowki+=klient.Gotowka;
                 listaKlientow.add(klient);
+                if(klient.uprzywilejowany==true){
+                    liczbaPriorytetowych++;
+                }
+            }
             else{
                 boolean temp = true;
                 for (Klient kl: listaKlientow) {
                     if(kl.IDKlienta==klient.IDKlienta) temp = false;
                 }
-                if(temp) listaKlientow.add(klient);
-            }
-            liczbaKlientowWSklepie++;
-            iloscGotowki+=klient.Gotowka;
-            if(klient.uprzywilejowany==true){
-                liczbaPriorytetowych++;
+                if(temp){
+                    listaKlientow.add(klient);
+                    liczbaKlientowWSklepie++;
+                    iloscGotowki+=klient.Gotowka;
+                    if(klient.uprzywilejowany==true){
+                        liczbaPriorytetowych++;
+                    }
+                }
             }
         }
     }
