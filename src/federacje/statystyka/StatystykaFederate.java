@@ -1,11 +1,15 @@
 package federacje.statystyka;
 
 import Interactions.RozpoczecieObslugi;
+import Interactions.WejscieDoKolejki;
+import Interactions.ZakoczeniePrzerwy;
+import Interactions.ZakonczanieObslugiKlienta;
 import common.AmbasadorAbstract;
 import common.ExternalEventAbstract;
 import common.FederateAbstract;
 import federacje.kasa.KasaFederate;
 import hla.rti.RTIexception;
+import objects.Klient;
 import statistic.Colections.*;
 
 import statistic.Obj.*;
@@ -25,9 +29,56 @@ public class StatystykaFederate extends FederateAbstract {
     WejsciaDoKolejki wejsciaDoKolejki=new WejsciaDoKolejki();
     RozpoczeciaPrzerwy rozpoczeciaPrzerwy=new RozpoczeciaPrzerwy();
     RozpoczeciaOblugi rozpoczeciaOblugi=new RozpoczeciaOblugi();
+    //Obliczenia----------
+    int iloscGotowki=0;
+    int liczbaKlientowWSklepie=0;
+    int czasObslugi=0;
+    int liczbaObsluzonych=0;
+    int czasPrzerw=0;
+    int liczbaPrzerw=0;
+    int czasZakupow=0;
+    int liczbaKlientowWKolejce=0;
+    int liczbaKas=0;
     //--------------------
     public static final String federateName = "StatystykaFederate";
     public AmbasadorAbstract fedamb;
+
+    public void liczenieKlientowWSklepie(Klient klient){
+        if(klient.NumerKolejki == -1){
+            liczbaKlientowWSklepie++;
+            iloscGotowki+=klient.Gotowka;
+        }
+    }
+
+    public int sredniCzasZakupow(){
+        return czasZakupow/liczbaKlientowWKolejce;
+    }
+
+    public int sredniaIloscGotowki(){
+        return iloscGotowki/liczbaKlientowWSklepie;
+    }
+
+    public int sredniCzasObslugi(){
+        return czasObslugi/liczbaObsluzonych;
+    }
+
+    public int sredniCzasPrzerwy(){
+        return czasPrzerw/liczbaPrzerw;
+    }
+
+    public void wypisanieStatystyk(){
+        System.out.println("*********************************************************");
+        System.out.println("************************STATYSTYKA***********************");
+        System.out.println("*********************************************************");
+        System.out.println("Liczba otwartych kas: " + liczbaKas);
+        System.out.println("Laczna liczba klientow w sklepie: " + liczbaKlientowWSklepie);
+        System.out.println("Srednia ilosc gotowki: " + sredniaIloscGotowki());
+        System.out.println("Sredni czas zakupow: " + sredniCzasZakupow());
+        System.out.println("Sredni czas oczekiwania: " );
+        System.out.println("Sredni czas obslugi: " + sredniCzasObslugi());
+        System.out.println("Sredni czas przerwy: " + sredniCzasPrzerwy());
+        System.out.println("*********************************************************");
+    }
 
     public void runFederate(){
         fedamb = new AmbasadorAbstract();
@@ -42,28 +93,39 @@ public class StatystykaFederate extends FederateAbstract {
                         // System.out.println("w for");
                         switch (event.getEventType()) {
                             case Klient:
-                                log("Dodano klienta: " + event.getKlient());
-                                updateKlientList.add(new UpdateKlient(event.getTime(), event.getKlient()));
+                                Klient klient = event.getKlient();
+                                log("Dodano klienta: " + klient);
+                                updateKlientList.add(new UpdateKlient(event.getTime(), klient));
+                                liczenieKlientowWSklepie(klient);
                                 break;
                             case Kasa:
                                 log("Dodano kase: " + event.getKasa());
                                 updateKasaList.add(new UpdateKasa(event.getTime(),event.getKasa()));
                                 break;
                             case ZakonczanieObslugiKlienta:
-                                log("Zakonczenie obslugi klienta: " + event.getZakonczanieObslugiKlienta());
-                                zakonczeniaObslugiKliena.add(new EvZakonczenieObslugiKlienta(event.getTime(),event.getZakonczanieObslugiKlienta()));
+                                ZakonczanieObslugiKlienta zak = event.getZakonczanieObslugiKlienta();
+                                log("Zakonczenie obslugi klienta: " + zak);
+                                zakonczeniaObslugiKliena.add(new EvZakonczenieObslugiKlienta(event.getTime(),zak));
+                                czasObslugi+=zak.CzasObslugi;
+                                liczbaObsluzonych++;
                                 break;
                             case UruchomNowaKase:
                                 log("Odebrano zadanie uruchomienia kasy");
                                 zadaniaUruchomieniaKasy.add(new ZadanieUruchomieniaKasy(event.getTime()));
                                 break;
                             case ZakoczeniePrzerwy:
-                                log("Zakoczenie przerwy: "+event.getZakoczeniePrzerwy());
-                                zakoczeniaPrzerwy.add(new EvZakoczeniePrzerwy(event.getTime(), event.getZakoczeniePrzerwy()));
+                                ZakoczeniePrzerwy zap = event.getZakoczeniePrzerwy();
+                                log("Zakoczenie przerwy: "+zap);
+                                zakoczeniaPrzerwy.add(new EvZakoczeniePrzerwy(event.getTime(), zap));
+                                liczbaPrzerw++;
+                                czasPrzerw+=zap.CzasPrzerwy;
                                 break;
                             case WejscieDoKolejki:
-                                log("Wejscie do kolejki klienta: " + event.getWejscieDoKolejki());
-                                wejsciaDoKolejki.add(new EvWejscieDoKolejki(event.getTime(), event.getWejscieDoKolejki()));
+                                WejscieDoKolejki wej = event.getWejscieDoKolejki();
+                                log("Wejscie do kolejki klienta: " + wej);
+                                wejsciaDoKolejki.add(new EvWejscieDoKolejki(event.getTime(), wej));
+                                liczbaKlientowWKolejce++;
+                                czasZakupow+=wej.CzasZakupow;
                                 break;
                             case RozpocznijPrzerwe:
                                 log("Rozpocznij przerwe: "+event.getRozpocznijPrzerwe());
@@ -75,6 +137,7 @@ public class StatystykaFederate extends FederateAbstract {
                                 break;
                             case ZakoczenieSymulacji:
                                 log("Odebrano zakonczenie symulacji");
+                                wypisanieStatystyk();
                                 this.isRunning=false;
                                 break;
                             case RozpoczecieSymulacji:
