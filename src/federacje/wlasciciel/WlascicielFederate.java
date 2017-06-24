@@ -61,6 +61,7 @@ public class WlascicielFederate extends FederateAbstract {
                                 //CzasWyslaniaNaPrzerwe=fedamb.federateTime+30+(int)(Math.random() * 50);
                                 break;
 
+
                         }
                     } catch (Exception e) {
 
