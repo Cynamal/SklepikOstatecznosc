@@ -111,17 +111,18 @@ public class KasaFederate extends FederateAbstract {
                int indexwLisiceklient= kliencjiWSklepie.mygetFirst(kas.NumerKasy);
                if(indexwLisiceklient!=-1)
                {
-                   int czasOczekiwania=1;
+                   int czasOczekiwania=25;
                    kas.czyObsluguje=true;
                    kas.czasRozpoczeciaObslugi=fedamb.federateTime;
                    kas.czasZakonczeniaObslugi=fedamb.federateTime+czasOczekiwania;
 
                    Klient najlepszy= kliencjiWSklepie.get(indexwLisiceklient);
                    RozpoczecieObslugi rozpoczecieObslugi=new RozpoczecieObslugi(czasOczekiwania,kas.NumerKasy,najlepszy.IDKlienta);
-                   SuppliedParameters attributes=rozpoczecieObslugi.getRTIAtributes(fedamb);
+                   //SuppliedParameters attributes=rozpoczecieObslugi.getRTIAtributes(fedamb);
                    LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
                    kas.idKlientaOblugiwanego=najlepszy.IDKlienta;
-                   rtiamb.sendInteraction(fedamb.publikacje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler(), attributes, "tag".getBytes(), time );
+                   //rtiamb.sendInteraction(fedamb.publikacje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler(), attributes, "tag".getBytes(), time );
+                   rozpocznijObslugeKlienta(new RozpoczecieObslugi(0, kas.NumerKasy, najlepszy.IDKlienta), (fedamb.federateTime + fedamb.federateLookahead));
                    //kliencjiWSklepie.remove(najlepszy);
                     kliencjiWSklepie.RemoveByID(najlepszy.IDKlienta);
                    kas.Dlugosc--;
@@ -151,6 +152,21 @@ public class KasaFederate extends FederateAbstract {
                 }
             }
         }
+    }
+
+    private void rozpocznijObslugeKlienta(RozpoczecieObslugi rozpoczecieObslugi,double timeStep)throws RTIexception
+    {
+        SuppliedParameters parameters =
+                RtiFactoryFactory.getRtiFactory().createSuppliedParameters();
+        byte[] ID=rozpoczecieObslugi.getIDKlientaByte();
+        byte[] CzasOczekiwania=rozpoczecieObslugi.getCzasOczekiwaniaByte();
+        byte[] NumerKasy=rozpoczecieObslugi.getNumerKasyByte();
+
+        parameters.add(fedamb.publikacje.rozpoczecieObslugiHandler.NumerKasyHandler,NumerKasy);
+        parameters.add(fedamb.publikacje.rozpoczecieObslugiHandler.CzasOczekiwaniaHandler,CzasOczekiwania);
+        parameters.add(fedamb.publikacje.rozpoczecieObslugiHandler.IDKlientaHandler,ID);
+        LogicalTime time = convertTime( timeStep );
+        rtiamb.sendInteraction(fedamb.publikacje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler(), parameters, "rozpocznijObsluge".getBytes(), time );
     }
 
     /** Wysyla parametry kasy do rti Moze byc uzyta do inicjalizacji lub aktualizacji

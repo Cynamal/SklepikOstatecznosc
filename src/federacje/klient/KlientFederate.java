@@ -75,13 +75,15 @@ public class KlientFederate extends FederateAbstract {
             Kasa kasa= Kasa.FindbyID(kasy,numerKasy);
            int idKlientDoUsuniecia= kasa.kolejka.mygetFirst();
            Klient klientDoUsuniecia=kasa.kolejka.get(idKlientDoUsuniecia);
+           System.out.println("KLIENTOW W KOLEJCE VOL 1 - "+kasa.kolejka.size());
+           kasa.kolejka.remove(idKlientDoUsuniecia);
             deleteObject(klientDoUsuniecia.hendler);
-           kasa.kolejka.remove(klientDoUsuniecia);
             for (Klient kl: kasa.kolejka
                  ) {
                 kl.NumerWKolejce--;
                 UpdateKlienttoRTI(kl.hendler,kl);
             }
+            System.out.println("KLIENTOW W KOLEJCE VOL 2 - "+kasa.kolejka.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
