@@ -86,7 +86,35 @@ public class KlientFederate extends FederateAbstract {
             e.printStackTrace();
         }
     }
+    private void wchodzenieDoKasi() {
+        for (Klient kl: kliencjiWSklepie)
+        {
+            if(kl.czasZakonczeniaZakupow==fedamb.federateTime)
+            {
+                LinkedList<Kasa>aktywne= Kasa.getActiveOnlykasi(kasy);
+                int indexKasi= Kasa.FindBestQiueKASI(kl.uprzywilejowany,aktywne);
+                if(indexKasi==-1)
+                {
+                    kl.czasZakonczeniaZakupow+=3;
+                }
+                else
+                {
 
+                    aktywne.get(indexKasi).kolejkaDOKASI.add(kl);
+                    kliencjiWSklepie.remove(kl);
+                    try {
+                        UpdateKlienttoRTI(kl.hendler,kl);
+                        int czs= (int) Math.round( kl.czasZakonczeniaZakupow-kl.czasRozpoczeciaZakupow);
+                        wyslijInterakcjeWejsciaDoKolejki(new WejscieDoKolejki(czs,aktywne.get(indexKasi).NumerKasy,kl.IDKlienta));
+                    } catch (RTIexception rtIexception) {
+                        rtIexception.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
     private void wchodzenieDokolejki() {
         ListaKlientow DoWywalenia= new ListaKlientow(Integer.MAX_VALUE);
         for (Klient kl: kliencjiWSklepie

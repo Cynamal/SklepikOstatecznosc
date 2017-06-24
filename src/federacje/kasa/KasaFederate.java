@@ -77,9 +77,10 @@ public class KasaFederate extends FederateAbstract {
                                 WejscieDoKolejki kolejk= event.getWejscieDoKolejki();
                                 Kasa prawislowa= Kasa.FindbyID(kasy,kolejk.NumerKasy);
                                 prawislowa.Dlugosc++;
-                                if(prawislowa.Dlugosc==prawislowa.kolejka.WielkoscMax)
+                                if(prawislowa.Dlugosc==prawislowa.kolejkaDOKASI.WielkoscMax)
                                     prawislowa.CzyPelna=true;
                                 sendKasaToRTI(prawislowa.hendKasa,prawislowa);
+                                prawislowa.kolejkaDOKASI.addKlientKasa(kliencjiWSklepie.get(kliencjiWSklepie.getIndexByID(kolejk.IDKlienta)));
                                 log("Klient:" +kolejk.IDKlienta+" wszedl do kasy "+kolejk.NumerKasy);
                                 break;
                         }

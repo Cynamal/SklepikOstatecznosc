@@ -13,6 +13,7 @@ import java.util.LinkedList;
  */
 public class Kasa {
     public ListaKlientow kolejka=new ListaKlientow(MaxSizeofQiue);
+    public ListaKlientowv2 kolejkaDOKASI;
     public int NumerKasy;
     public int Dlugosc;
     public boolean CzyPelna;
@@ -23,6 +24,7 @@ public class Kasa {
     public boolean czyObsluguje=false;
     public double czasRozpoczeciaObslugi;
     public double czasZakonczeniaObslugi;
+
     public Kasa(int NumerKasy,int Dlugosc, boolean CzyPelna,boolean CzyOtwarta,int hendKasa)
     {
         this.hendKasa=hendKasa;
@@ -30,6 +32,7 @@ public class Kasa {
         this.Dlugosc=Dlugosc;
         this.CzyPelna=CzyPelna;
         this.CzyOtwarta=CzyOtwarta;
+        this.kolejkaDOKASI=new ListaKlientowv2(this.MaxSizeofQiue,this.NumerKasy);
     }
     public Kasa(int NumerKasy,int Dlugosc, boolean CzyPelna,boolean CzyOtwarta)
     {
@@ -38,6 +41,7 @@ public class Kasa {
         this.Dlugosc=Dlugosc;
         this.CzyPelna=CzyPelna;
         this.CzyOtwarta=CzyOtwarta;
+        this.kolejkaDOKASI=new ListaKlientowv2(this.MaxSizeofQiue,this.NumerKasy);
     }
     public Kasa()
     {
@@ -45,6 +49,7 @@ public class Kasa {
         this.Dlugosc=-1;
         this.CzyPelna=true;
         this.CzyOtwarta=false;
+        this.kolejkaDOKASI=new ListaKlientowv2(this.MaxSizeofQiue,this.NumerKasy);
     }
     public SuppliedAttributes getRTIAtributes(AmbasadorAbstract fedamb) throws RTIinternalError {
         SuppliedAttributes attributes =
@@ -144,7 +149,61 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
         }
         return ret;
     }
+    /**
+     * Pobiera tylko klasy aktywne z listy kas
+     * @param kasy Lista wszystkich kas w systemie
+     * @return Lista aktywnych kas
+     */
+    public static LinkedList<Kasa> getActiveOnlykasi(LinkedList<Kasa> kasy)
+    {
+        LinkedList<Kasa> ret=new LinkedList<>();
+        for (Kasa tmp: kasy
+                ) {
+            if(!tmp.CzyPelna&&!tmp.kolejkaDOKASI.CzyPelna()&&tmp.CzyOtwarta)
+            {
+                //  System.out.println("max"+MaxSizeofQiue+"czypelne"+tmp.CzyPelna+"NumerKasy:"+tmp.NumerKasy+"W kolejce:"+tmp.kolejka.size()+" RTI size:"+tmp.Dlugosc);
+                ret.add(tmp);
+            }
+        }
+        return ret;
+    }
+    /** odnajduje najlepsza kolejke dla danego klienta
+     * @param przywilej czy klient jest uprzywilejowany
+     * @param kasy lista aktywnych kas
+     * @return
+     */
+    public static int FindBestQiueKASI(boolean przywilej,LinkedList<Kasa> kasy)
+    {
+        int ret=-1;
+        if(przywilej)
+        {
+            int Najlepsiesziuni=kasy.getFirst().kolejkaDOKASI.ileLudziowZPriorytetem();
+            for(int i=0;i<kasy.size();i++)
+            {
+                if(Najlepsiesziuni>=kasy.get(i).kolejkaDOKASI.ileLudziowZPriorytetem())
+                {
+                    Najlepsiesziuni=kasy.get(i).kolejkaDOKASI.ileLudziowZPriorytetem();
+                    ret=i;
+                }
+            }
 
+
+        }
+        else {
+            int Najlepsiesziuni = kasy.getFirst().kolejkaDOKASI.size();
+
+            for (int i = 0; i < kasy.size(); i++) {
+                if (Najlepsiesziuni >= kasy.get(i).kolejkaDOKASI.size())
+                {
+                    Najlepsiesziuni = kasy.get(i).kolejkaDOKASI.size();
+                    ret=i;
+                }
+
+            }
+
+        }
+        return ret;
+    }
     /** odnajduje najlepsza kolejke dla danego klienta
      * @param przywilej czy klient jest uprzywilejowany
      * @param kasy lista aktywnych kas
