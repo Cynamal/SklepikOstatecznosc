@@ -23,7 +23,7 @@ import java.util.Collections;
  * Created by Marcin on 22.06.2017.
  */
 public class KasaFederate extends FederateAbstract {
-    public int PoczatkowaLiczbaKas=4;
+    public int PoczatkowaLiczbaKas=2;
     public static final String federateName = "KasaFederate";
     public AmbasadorAbstract fedamb;
 
@@ -80,7 +80,9 @@ public class KasaFederate extends FederateAbstract {
                                 if(prawislowa.Dlugosc==prawislowa.kolejkaDOKASI.WielkoscMax)
                                     prawislowa.CzyPelna=true;
                                 sendKasaToRTI(prawislowa.hendKasa,prawislowa);
-                                prawislowa.kolejkaDOKASI.addKlientKasa(kliencjiWSklepie.get(kliencjiWSklepie.getIndexByID(kolejk.IDKlienta)));
+                                Klient temp = kliencjiWSklepie.get(kliencjiWSklepie.getIndexByID(kolejk.IDKlienta));
+                                prawislowa.kolejkaDOKASI.addKlientKasa(temp);
+                                System.out.println("Klient ID "+temp.IDKlienta+" numer kolejki "+temp.NumerKolejki+" numer w kolejce "+temp.NumerWKolejce);
                                 log("Klient:" +kolejk.IDKlienta+" wszedl do kasy "+kolejk.NumerKasy);
                                 break;
                         }
@@ -90,11 +92,13 @@ public class KasaFederate extends FederateAbstract {
                 }
                 fedamb.externalEvents.clear();
             }
+            /*
             try {
                 RozpocznijObslugelubZakoncz();
             } catch (RTIexception rtIexception) {
                 rtIexception.printStackTrace();
             }
+            */
             try {
                 advanceTime(1.0,fedamb);
             } catch (RTIexception rtIexception) {

@@ -18,7 +18,7 @@ public class Kasa {
     public int Dlugosc;
     public boolean CzyPelna;
     public boolean CzyOtwarta;
-    public static int MaxSizeofQiue=10;
+    public static int MaxSizeofQiue=3;
     public int hendKasa;
     public int idKlientaOblugiwanego= -1;
     public boolean czyObsluguje=false;
@@ -175,32 +175,27 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
     public static int FindBestQiueKASI(boolean przywilej,LinkedList<Kasa> kasy)
     {
         int ret=-1;
-        if(przywilej)
-        {
-            int Najlepsiesziuni=kasy.getFirst().kolejkaDOKASI.ileLudziowZPriorytetem();
-            for(int i=0;i<kasy.size();i++)
-            {
-                if(Najlepsiesziuni>=kasy.get(i).kolejkaDOKASI.ileLudziowZPriorytetem())
+        if(kasy.size()!=0){
+            if(przywilej) {
+                int Najlepsiesziuni=kasy.getFirst().kolejkaDOKASI.ileLudziowZPriorytetem();
+                for(int i=0;i<kasy.size();i++)
                 {
-                    Najlepsiesziuni=kasy.get(i).kolejkaDOKASI.ileLudziowZPriorytetem();
-                    ret=i;
+                    if(Najlepsiesziuni>=kasy.get(i).kolejkaDOKASI.ileLudziowZPriorytetem())
+                    {
+                        Najlepsiesziuni=kasy.get(i).kolejkaDOKASI.ileLudziowZPriorytetem();
+                        ret=i;
+                    }
                 }
             }
-
-
-        }
-        else {
-            int Najlepsiesziuni = kasy.getFirst().kolejkaDOKASI.size();
-
-            for (int i = 0; i < kasy.size(); i++) {
-                if (Najlepsiesziuni >= kasy.get(i).kolejkaDOKASI.size())
-                {
-                    Najlepsiesziuni = kasy.get(i).kolejkaDOKASI.size();
-                    ret=i;
+            else {
+                int Najlepsiesziuni = kasy.getFirst().kolejkaDOKASI.size();
+                for (int i = 0; i < kasy.size(); i++) {
+                    if (Najlepsiesziuni >= kasy.get(i).kolejkaDOKASI.size()) {
+                        Najlepsiesziuni = kasy.get(i).kolejkaDOKASI.size();
+                        ret=i;
+                    }
                 }
-
             }
-
         }
         return ret;
     }
