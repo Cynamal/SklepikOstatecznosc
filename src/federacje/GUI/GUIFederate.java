@@ -93,6 +93,7 @@ public class GUIFederate extends FederateAbstract {
                                     log("Odebrano nowa kase:"+kasa);
                                 }
                                 else
+
                                     log("Zaktualizowano kase:"+kasa);
                                 break;
                             case ZakonczanieObslugiKlienta:
@@ -128,6 +129,7 @@ public class GUIFederate extends FederateAbstract {
 
                     }
                 }
+                czekajAzWszyscySieUruchomia();
                 fedamb.externalEvents.clear();
             }
             try {

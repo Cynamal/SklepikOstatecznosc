@@ -51,7 +51,7 @@ public class KlientFederate extends FederateAbstract {
                                 break;
                             case RozpoczecieObslugi:
                                 RozpoczecieObslugi rozpoczecieObslugi= event.getRozpoczecieObslugi();
-                                UpdateQue(rozpoczecieObslugi.NumerKasy);
+                                UpdateQue(rozpoczecieObslugi.NumerKasy,rozpoczecieObslugi.IDKlienta);
                                 break;
                         }
                     } catch (Exception e) {
@@ -70,13 +70,13 @@ public class KlientFederate extends FederateAbstract {
         }
     }
 
-    private void UpdateQue(int numerKasy) {
+    private void UpdateQue(int numerKasy,int IDKlienta) {
         try {
             Kasa kasa= Kasa.FindbyID(kasy,numerKasy);
-           int idKlientDoUsuniecia= kasa.kolejka.mygetFirst();
+           int idKlientDoUsuniecia= kasa.kolejka.getIndexByID(IDKlienta);
            Klient klientDoUsuniecia=kasa.kolejka.get(idKlientDoUsuniecia);
+            kasa.kolejka.remove(klientDoUsuniecia);
             deleteObject(klientDoUsuniecia.hendler);
-           kasa.kolejka.remove(klientDoUsuniecia);
             for (Klient kl: kasa.kolejka
                  ) {
                 kl.NumerWKolejce--;

@@ -205,6 +205,7 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
                 tmp.CzyPelna=kasa.CzyPelna;
                 //tmp=kasa;
                 return false;
+
             }
         }
         list.add(kasa);
