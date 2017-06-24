@@ -9,12 +9,15 @@ import common.ExternalEventAbstract;
 import common.FederateAbstract;
 import federacje.kasa.KasaFederate;
 import hla.rti.RTIexception;
+import objects.Kasa;
 import objects.Klient;
 import statistic.Colections.*;
 
 import statistic.Obj.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 
 /**
  * Created by Marcin on 22.06.2017.
@@ -29,24 +32,50 @@ public class StatystykaFederate extends FederateAbstract {
     WejsciaDoKolejki wejsciaDoKolejki=new WejsciaDoKolejki();
     RozpoczeciaPrzerwy rozpoczeciaPrzerwy=new RozpoczeciaPrzerwy();
     RozpoczeciaOblugi rozpoczeciaOblugi=new RozpoczeciaOblugi();
+    LinkedList<Kasa> listaKas=new LinkedList<Kasa>();
+    LinkedList<Klient> listaKlientow=new LinkedList<Klient>();
     //Obliczenia----------
     int iloscGotowki=0;
     int liczbaKlientowWSklepie=0;
+    int liczbaPriorytetowych=0;
     int czasObslugi=0;
     int liczbaObsluzonych=0;
     int czasPrzerw=0;
     int liczbaPrzerw=0;
     int czasZakupow=0;
     int liczbaKlientowWKolejce=0;
-    int liczbaKas=0;
     //--------------------
     public static final String federateName = "StatystykaFederate";
     public AmbasadorAbstract fedamb;
 
+    public void liczenieKas(Kasa kasa){
+        if(listaKas.size()==0)
+            listaKas.add(kasa);
+        else{
+            boolean temp = true;
+            for (Kasa ks: listaKas) {
+                if(ks.NumerKasy==kasa.NumerKasy) temp = false;
+            }
+            if(temp) listaKas.add(kasa);
+        }
+    }
+
     public void liczenieKlientowWSklepie(Klient klient){
         if(klient.NumerKolejki == -1){
+            if(listaKlientow.size()==0)
+                listaKlientow.add(klient);
+            else{
+                boolean temp = true;
+                for (Klient kl: listaKlientow) {
+                    if(kl.IDKlienta==klient.IDKlienta) temp = false;
+                }
+                if(temp) listaKlientow.add(klient);
+            }
             liczbaKlientowWSklepie++;
             iloscGotowki+=klient.Gotowka;
+            if(klient.uprzywilejowany==true){
+                liczbaPriorytetowych++;
+            }
         }
     }
 
@@ -54,8 +83,9 @@ public class StatystykaFederate extends FederateAbstract {
         System.out.println("*********************************************************");
         System.out.println("************************STATYSTYKA***********************");
         System.out.println("*********************************************************");
-        System.out.println("Liczba otwartych kas: " + liczbaKas);
-        System.out.println("Laczna liczba klientow w sklepie: " + liczbaKlientowWSklepie);
+        System.out.println("Liczba kas: " + listaKas.size());
+        System.out.println("Laczna liczba klientow: " + liczbaKlientowWSklepie);
+        System.out.println("Laczna liczba klientow uprzywilejowanych: " + liczbaPriorytetowych);
         if(liczbaKlientowWSklepie!=0)
             System.out.println("Srednia ilosc gotowki: " + Math.round(iloscGotowki/liczbaKlientowWSklepie));
         if(liczbaKlientowWKolejce!=0)
@@ -64,7 +94,7 @@ public class StatystykaFederate extends FederateAbstract {
         if(liczbaObsluzonych!=0)
             System.out.println("Sredni czas obslugi: " + Math.round(czasObslugi/liczbaObsluzonych));
         if(liczbaPrzerw!=0)
-        System.out.println("Sredni czas przerwy: " + Math.round(czasPrzerw/liczbaPrzerw));
+            System.out.println("Sredni czas przerwy: " + Math.round(czasPrzerw/liczbaPrzerw));
         System.out.println("*********************************************************");
     }
 
@@ -87,8 +117,10 @@ public class StatystykaFederate extends FederateAbstract {
                                 liczenieKlientowWSklepie(klient);
                                 break;
                             case Kasa:
-                                log("Dodano kase: " + event.getKasa());
-                                updateKasaList.add(new UpdateKasa(event.getTime(),event.getKasa()));
+                                Kasa kasa = event.getKasa();
+                                log("Dodano kase: " + kasa);
+                                liczenieKas(kasa);
+                                updateKasaList.add(new UpdateKasa(event.getTime(),kasa));
                                 break;
                             case ZakonczanieObslugiKlienta:
                                 ZakonczanieObslugiKlienta zak = event.getZakonczanieObslugiKlienta();

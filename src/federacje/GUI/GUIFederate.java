@@ -26,6 +26,7 @@ public class GUIFederate extends FederateAbstract {
     public int liczbaKlientowRobiacychZakupy=0;
     public static String dzialanieLog="";
     public LinkedList<Kasa> kasy = new LinkedList<>();
+    public LinkedList<Klient> klienci = new LinkedList<>();
     private int IteratorKasy = 1;
     public GUIFederate(GUIapp GUI)
     {
@@ -36,11 +37,21 @@ public class GUIFederate extends FederateAbstract {
         dzialanieLog=x+"\n"+dzialanieLog;
     }
 
+    public String czyKlientUprzywilejowany(int IDKlienta){
+        boolean temp = false;
+        for (Klient kl:klienci) {
+            if(kl.IDKlienta==IDKlienta)
+                if(kl.uprzywilejowany==true) temp=true;
+        }
+        if(temp)return " (uprzywilejowany)";
+        else return " (nieuprzywilejowany)";
+    }
+
     public void liczenieKlientowWSklepie(Klient klient){
         if(klient.NumerKolejki == -1){
             liczbaKlientowWSklepie++;
             liczbaKlientowRobiacychZakupy++;
-            logowanieDzialania("Do sklepu wszedl klient o ID: " + klient.IDKlienta + " i rozpoczal zakupy");
+            logowanieDzialania("Do sklepu wszedl klient"+czyKlientUprzywilejowany(klient.IDKlienta)+" o ID: " + klient.IDKlienta + " i rozpoczal zakupy");
         }
     }
 
@@ -84,6 +95,7 @@ public class GUIFederate extends FederateAbstract {
                             case Klient:
                                 Klient klient = event.getKlient();
                                 log("Dodano klienta: " + klient);
+                                dodawanieKlientow(klient);
                                 liczenieKlientowWSklepie(klient);
                                 break;
                             case Kasa:
@@ -98,7 +110,7 @@ public class GUIFederate extends FederateAbstract {
                                 break;
                             case ZakonczanieObslugiKlienta:
                                 ZakonczanieObslugiKlienta zak = event.getZakonczanieObslugiKlienta();
-                                logowanieDzialania("Klient o ID " + zak.IDKlienta + " zostal obsluzony i opuscil sklep. Czas obslugi trwal " + zak.CzasObslugi);
+                                logowanieDzialania("Klient"+czyKlientUprzywilejowany(zak.IDKlienta)+" o ID " + zak.IDKlienta + " zostal obsluzony i opuscil sklep. Czas obslugi trwal " + zak.CzasObslugi);
                                 log("Zakonczenie obslugi klienta: " + zak);
                                 klientOpuscilSklep();
                                 break;
@@ -110,11 +122,11 @@ public class GUIFederate extends FederateAbstract {
                                 WejscieDoKolejki wej = event.getWejscieDoKolejki();
                                 log("Wejscie do kolejki: " + wej);
                                 klientPrzestalRobicZakupy();
-                                logowanieDzialania("Klient o ID "+wej.IDKlienta+" zakonczyl zakupy po czasie "+wej.CzasZakupow+". Stanal w kolejce do kasy o numerze "+wej.NumerKasy);
+                                logowanieDzialania("Klient"+czyKlientUprzywilejowany(wej.IDKlienta)+" o ID "+wej.IDKlienta+" zakonczyl zakupy po czasie "+wej.CzasZakupow+". Stanal w kolejce do kasy o numerze "+wej.NumerKasy);
                                 break;
                             case RozpoczecieObslugi:
                                 RozpoczecieObslugi roz = event.getRozpoczecieObslugi();
-                                logowanieDzialania("Kasa o numerze "+roz.NumerKasy+" rozpoczela obsluge klienta o ID "+roz.IDKlienta+". Czas oczekiwania klienta w kolejce wynosil "+roz.CzasOczekiwania);
+                                logowanieDzialania("Kasa o numerze "+roz.NumerKasy+" rozpoczela obsluge klienta"+czyKlientUprzywilejowany(roz.IDKlienta)+" o ID "+roz.IDKlienta+". Czas oczekiwania klienta w kolejce wynosil "+roz.CzasOczekiwania);
                                 break;
                             case RozpocznijPrzerwe:
                                 RozpocznijPrzerwe rop = event.getRozpocznijPrzerwe();
@@ -153,6 +165,20 @@ public class GUIFederate extends FederateAbstract {
 
 
     }
+
+    public void dodawanieKlientow(Klient klient){
+        if(klienci.size()==0)
+            klienci.add(klient);
+        else{
+            boolean temp = true;
+            for (Klient kl: klienci) {
+                if(kl.IDKlienta==klient.IDKlienta) temp = false;
+            }
+            if(temp) klienci.add(klient);
+        }
+    }
+
+
     private void wyslijZadanieZakonczeniaSymulacji(double timeStep) throws Exception {
         SuppliedParameters parameters =
                 RtiFactoryFactory.getRtiFactory().createSuppliedParameters();
