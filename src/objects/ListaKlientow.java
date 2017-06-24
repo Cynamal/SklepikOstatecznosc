@@ -69,10 +69,47 @@ public class ListaKlientow extends LinkedList<Klient> {
         }
         return -1;
     }
-    public int getFirst(int IndexKasa)
+    public ListaKlientow getIndexedKasaClientOnly(int IndexKasa)
     {
-        //#TODO tu ma byc zwracanie pierwszego klienta dla kasy
-        return 0;
+        ListaKlientow lis= new ListaKlientow(Integer.MAX_VALUE);
+        for (Klient kl: this
+             ) {
+            if(kl.NumerKolejki==IndexKasa) lis.add(kl);
+        }
+        return lis;
+    }
+    public int mygetFirst()
+    {
+        if(this.size()==0) return -1;
+        int index=0;
+        int best=getFirst().NumerWKolejce;
+        for (int i=0;i<this.size();i++)
+        {
+            if(get(i).NumerWKolejce<=best)
+            {
+                best=get(i).NumerWKolejce;
+                index=i;
+            }
+        }
+
+        return index;
+    }
+    public int mygetFirst(int IndexKasa)
+    {
+        ListaKlientow lis =this.getIndexedKasaClientOnly(IndexKasa);
+        if(lis.size()==0) return -1;
+        int index=0;
+        int best=getFirst().NumerWKolejce;
+        for (int i=0;i<this.size();i++)
+        {
+            if(get(i).NumerWKolejce<=best&&get(i).NumerKolejki==IndexKasa)
+            {
+                best=get(i).NumerWKolejce;
+                index=i;
+            }
+        }
+
+        return index;
     }
     public Klient GetAndRemove(int index)
     {
