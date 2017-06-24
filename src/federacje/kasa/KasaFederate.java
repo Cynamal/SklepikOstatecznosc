@@ -144,7 +144,8 @@ public class KasaFederate extends FederateAbstract {
     }
     private void sendZakonczeniePrzerwy(PrzerwaKasy przerwaKasy)throws RTIexception
     {
-        ZakoczeniePrzerwy zakoczeniePrzerwy= new ZakoczeniePrzerwy((int) Math.round((przerwaKasy.KoniecPrzerwy-przerwaKasy.poczatekPrzerwy)),przerwaKasy.kasa.NumerKasy);
+        //ZakoczeniePrzerwy zakoczeniePrzerwy= new ZakoczeniePrzerwy((int) Math.round((przerwaKasy.KoniecPrzerwy-przerwaKasy.poczatekPrzerwy)),przerwaKasy.kasa.NumerKasy);
+        ZakoczeniePrzerwy zakoczeniePrzerwy= new ZakoczeniePrzerwy((int) Math.round(przerwaKasy.czasPrzerwy),przerwaKasy.kasa.NumerKasy);
         SuppliedParameters parameters =
                 RtiFactoryFactory.getRtiFactory().createSuppliedParameters();
         byte[] czasPrzerwy=zakoczeniePrzerwy.getCzasPrzerwyByte();
