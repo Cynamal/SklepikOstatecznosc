@@ -131,15 +131,25 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
         }
         return ret;
     }
-
+    public static Kasa WesLosowaAktywnaKase(LinkedList<Kasa> kasy) throws Exception
+    {
+        LinkedList<Kasa> aktywne= new LinkedList<>();
+        for (Kasa kas: kasy
+             ) {
+            if(!kas.CzyPelna&&kas.CzyOtwarta) aktywne.addLast(kas);
+        }
+        if(aktywne.size()==0) throw new Exception("Trzeba najsampierw spawdzic czy istnieja kasy aktywne");
+       int indexLos= 0 + (int)(Math.random() * aktywne.size());
+       return aktywne.get(indexLos);
+    }
     public static boolean SprawdzCZyWszytkiePelne(LinkedList<Kasa> kasy)
     {
         if(kasy.size()==0) return true;
 
         for (Kasa tmp: kasy
                 ) {
-            System.out.print("TMPDEB "+tmp);
-            if(!tmp.CzyPelna) return false;
+
+            if(!tmp.CzyPelna&&tmp.CzyOtwarta) return false;
         }
         return true;
     }
