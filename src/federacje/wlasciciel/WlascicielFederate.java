@@ -61,8 +61,9 @@ public class WlascicielFederate extends FederateAbstract {
             if(this.isRunning)
             if(!wyslanoZadanieDodaniaNowej)
             {
-                OtworzKaseJezeliKonieczne();
-                wyslanoZadanieDodaniaNowej=true;
+                wyslanoZadanieDodaniaNowej=OtworzKaseJezeliKonieczne();
+
+                System.out.print("Wyslano zadanieDodania Nowej Kasy");
             }
 
 
@@ -78,25 +79,28 @@ public class WlascicielFederate extends FederateAbstract {
     public static void main(String[] args) {
         new WlascicielFederate().runFederate();
     }
-    private void OtworzKaseJezeliKonieczne()
+    private boolean OtworzKaseJezeliKonieczne()
     {
-        if(fedamb.federateTime>5)
+        if(fedamb.federateTime>5.0)
         {
-            LinkedList<Kasa> kasyAktywne= Kasa.getActiveOnly(kasy);
-            if(kasyAktywne.size()==0)
+          //  LinkedList<Kasa> kasyAktywne= Kasa.getActiveOnly(kasy);
+            if(Kasa.SprawdzCZyWszytkiePelne(kasy))
             {
                 System.out.println("Nie znaleziono aktywnych kas. Wysylanie zadania dodania nowej");
                 try {
-                    WyslijZadanieUruchomieniaKasy(1.0);
+                    WyslijZadanieUruchomieniaKasy(2.0);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                return true;
             }
         }
+        return false;
 
     }
     private void WyslijZadanieUruchomieniaKasy(double timeStep) throws Exception
     {
+        System.out.println("bycbyc");
         SuppliedParameters parameters =
                 RtiFactoryFactory.getRtiFactory().createSuppliedParameters();
 
