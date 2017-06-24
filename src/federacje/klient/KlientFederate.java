@@ -2,6 +2,7 @@ package federacje.klient;
 
 import Interactions.RozpoczecieObslugi;
 import Interactions.WejscieDoKolejki;
+import Interactions.ZakonczanieObslugiKlienta;
 import common.AmbasadorAbstract;
 import common.ExternalEventAbstract;
 import common.FederateAbstract;
@@ -37,8 +38,6 @@ public class KlientFederate extends FederateAbstract {
                 Collections.sort(fedamb.externalEvents, new ExternalEventAbstract.ExternalEventComparator());
                 for (ExternalEventAbstract event : fedamb.externalEvents) {
                     try {
-
-
                         // System.out.println("w for");
                         switch (event.getEventType()) {
 
@@ -51,7 +50,16 @@ public class KlientFederate extends FederateAbstract {
                                 break;
                             case RozpoczecieObslugi:
                                 RozpoczecieObslugi rozpoczecieObslugi= event.getRozpoczecieObslugi();
-                                UpdateQue(rozpoczecieObslugi.NumerKasy);
+                                Kasa kasa = kasy.get(rozpoczecieObslugi.NumerKasy);
+                                Klient temp = kliencjiWSklepie.get(kliencjiWSklepie.getIndexByID(rozpoczecieObslugi.IDKlienta));
+                                kasa.kolejkaDOKASI.remove(temp);
+                                break;
+                            case ZakonczanieObslugiKlienta:
+                                ZakonczanieObslugiKlienta zak = event.getZakonczanieObslugiKlienta();
+                                log("Obsluzono klienta "+zak.IDKlienta+" i wyszedl");
+                                int indeksKlienta = kliencjiWSklepie.getIndexByID(zak.IDKlienta);
+                                Klient klient = kliencjiWSklepie.GetAndRemove(indeksKlienta);
+                                super.deleteObject(klient.hendler);
                                 break;
                         }
                     } catch (Exception e) {
@@ -61,7 +69,7 @@ public class KlientFederate extends FederateAbstract {
                 fedamb.externalEvents.clear();
             }
             dodajKlienta();
-            wchodzenieDokolejki();
+            wchodzenieDokolejkiKasi();
             try {
                 advanceTime(1.0,fedamb);
             } catch (RTIexception rtIexception) {
@@ -86,22 +94,19 @@ public class KlientFederate extends FederateAbstract {
             e.printStackTrace();
         }
     }
-    private void wchodzenieDoKasi() {
-        for (Klient kl: kliencjiWSklepie)
-        {
-            if(kl.czasZakonczeniaZakupow==fedamb.federateTime)
-            {
+    private void wchodzenieDokolejkiKasi() {
+        //ListaKlientow DoWywalenia= new ListaKlientow(Integer.MAX_VALUE);
+        for (Klient kl: kliencjiWSklepie) {
+            if(kl.czasZakonczeniaZakupow==fedamb.federateTime) {
                 LinkedList<Kasa>aktywne= Kasa.getActiveOnlykasi(kasy);
                 int indexKasi= Kasa.FindBestQiueKASI(kl.uprzywilejowany,aktywne);
-                if(indexKasi==-1)
-                {
+                if(indexKasi==-1) {
                     kl.czasZakonczeniaZakupow+=3;
                 }
-                else
-                {
-
+                else {
                     aktywne.get(indexKasi).kolejkaDOKASI.add(kl);
-                    kliencjiWSklepie.remove(kl);
+                    //DoWywalenia.add(kl);
+                    //kliencjiWSklepie.remove(kl);
                     try {
                         UpdateKlienttoRTI(kl.hendler,kl);
                         int czs= (int) Math.round( kl.czasZakonczeniaZakupow-kl.czasRozpoczeciaZakupow);
@@ -114,6 +119,10 @@ public class KlientFederate extends FederateAbstract {
                 }
             }
         }
+        //for (Klient kl:DoWywalenia
+        //        ) {
+        //    kliencjiWSklepie.remove(kl);
+        //}
     }
     private void wchodzenieDokolejki() {
         ListaKlientow DoWywalenia= new ListaKlientow(Integer.MAX_VALUE);
