@@ -93,7 +93,7 @@ public class KasaFederate extends FederateAbstract {
                                 RozpocznijPrzerwe przewe=event.getRozpocznijPrzerwe();
                                 Kasa kasaNAPrzerwe= Kasa.FindbyID(kasy,przewe.NumerKasy);
                                 kasaNAPrzerwe.CzyOtwarta=false;
-                                przerwaKasy=new PrzerwaKasy(kasaNAPrzerwe,1 + (int)(Math.random() * 13),fedamb.federateTime);
+                                przerwaKasy=new PrzerwaKasy(kasaNAPrzerwe,20 + (int)(Math.random() * 40),fedamb.federateTime);
                                 sendKasaToRTI(kasaNAPrzerwe.hendKasa,kasaNAPrzerwe);
                                 break;
                         }

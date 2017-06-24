@@ -72,9 +72,16 @@ public class KlientFederate extends FederateAbstract {
                 fedamb.externalEvents.clear();
             }
             if(this.isRunning)
-            dodajKlienta();
-            if(this.isRunning)
-            wchodzenieDokolejkiKasi();
+            {
+
+                    dodajKlienta();
+
+
+                wchodzenieDokolejkiKasi();
+            }
+
+
+
             try {
                 if(this.isRunning)
                 advanceTime(1.0,fedamb);
