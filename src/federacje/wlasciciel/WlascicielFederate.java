@@ -14,6 +14,7 @@ import objects.Klient;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  * Created by Marcin on 22.06.2017.
@@ -21,7 +22,7 @@ import java.util.LinkedList;
 public class WlascicielFederate extends FederateAbstract {
     public static final String federateName = "WlascicielFederate";
     public AmbasadorAbstract fedamb;
-    public double CzasWyslaniaNaPrzerwe=9;
+    public double CzasWyslaniaNaPrzerwe=20;
     public boolean CzyWyslanoNaPrzerwe=false;
     public void runFederate(){
         boolean wyslanoZadanieDodaniaNowej=false;
@@ -54,7 +55,10 @@ public class WlascicielFederate extends FederateAbstract {
                                 break;
                             case ZakoczeniePrzerwy:
                                 CzyWyslanoNaPrzerwe=false;
-                                CzasWyslaniaNaPrzerwe=fedamb.federateTime+30+(int)(Math.random() * 50);
+                                Random rand2 = new Random();
+                                int nowyczas = 100 + rand2.nextInt(65);
+                                CzasWyslaniaNaPrzerwe=fedamb.federateTime+nowyczas;
+                                //CzasWyslaniaNaPrzerwe=fedamb.federateTime+30+(int)(Math.random() * 50);
                                 break;
 
                         }
@@ -68,8 +72,6 @@ public class WlascicielFederate extends FederateAbstract {
             if(!wyslanoZadanieDodaniaNowej)
             {
                 wyslanoZadanieDodaniaNowej=OtworzKaseJezeliKonieczne();
-
-
             }
 
             if(this.isRunning&&!CzyWyslanoNaPrzerwe)CzyWyslanoNaPrzerwe=WyslijZadanieZamknieciaKasy();
@@ -81,6 +83,8 @@ public class WlascicielFederate extends FederateAbstract {
             }
         }
         System.out.print("Zamykanie");
+        ogloszeniePunktuSynchronizacjiWyjscia(fedamb);
+        osiagnieciePunktuSynchronizacjiWyjscia(fedamb);
     }
     public static void main(String[] args) {
         new WlascicielFederate().runFederate();
@@ -102,7 +106,7 @@ public class WlascicielFederate extends FederateAbstract {
                    try {
                        Kasa tmp=  Kasa.WesLosowaAktywnaKase(kasy);
                        RozpocznijPrzerwe przerwa= new RozpocznijPrzerwe(tmp.NumerKasy);
-                       LogicalTime newTime  = convertTime(fedamb.federateTime + 1.0);
+                       LogicalTime newTime  = convertTime(fedamb.federateTime + fedamb.federateLookahead);
                        LogicalTime time = newTime ;
                        SuppliedParameters attributes =
                                RtiFactoryFactory.getRtiFactory().createSuppliedParameters();

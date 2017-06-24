@@ -90,6 +90,8 @@ public class KlientFederate extends FederateAbstract {
             }
         }
         System.out.print("Zamykanie");
+        ogloszeniePunktuSynchronizacjiWyjscia(fedamb);
+        osiagnieciePunktuSynchronizacjiWyjscia(fedamb);
     }
 
     private void UpdateQue(int numerKasy) {
@@ -207,7 +209,6 @@ public class KlientFederate extends FederateAbstract {
       {
           int randTIMe= 5 + (int)(Math.random() * maximumTimeKlient);
           czasDodaniaNowegoKlienta+=randTIMe;
-
           try {
               int gotowka=100 + (int)(Math.random() * maxCash);
               int klienti=  registerKlient();

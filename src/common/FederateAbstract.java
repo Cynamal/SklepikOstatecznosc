@@ -141,7 +141,7 @@ public class FederateAbstract  {
         }
     }
 
-    private void osiagnieciePunktuSynchronizacjiWyjscia(AmbasadorAbstract fedamb) {
+    protected void osiagnieciePunktuSynchronizacjiWyjscia(AmbasadorAbstract fedamb) {
         try {
             rtiamb.synchronizationPointAchieved(READY_TO_STOP);
         } catch (SynchronizationLabelNotAnnounced | ConcurrentAccessAttempted | RTIinternalError | RestoreInProgress | SaveInProgress | FederateNotExecutionMember synchronizationLabelNotAnnounced) {
@@ -157,7 +157,7 @@ public class FederateAbstract  {
         }
     }
 
-    private void ogloszeniePunktuSynchronizacjiWyjscia(AmbasadorAbstract fedamb) {
+    protected void ogloszeniePunktuSynchronizacjiWyjscia(AmbasadorAbstract fedamb) {
         try {
             rtiamb.registerFederationSynchronizationPoint(READY_TO_STOP, null);
         } catch (FederateNotExecutionMember | SaveInProgress | RTIinternalError | RestoreInProgress | ConcurrentAccessAttempted federateNotExecutionMember) {

@@ -28,6 +28,7 @@ public class KasaFederate extends FederateAbstract {
     public static final String federateName = "KasaFederate";
     public AmbasadorAbstract fedamb;
     public PrzerwaKasy przerwaKasy;
+    public boolean czasNaPrzerwe = false;
     public void runFederate(){
         fedamb = new AmbasadorAbstract();
         CommonrunFederate(federateName,fedamb);
@@ -93,7 +94,11 @@ public class KasaFederate extends FederateAbstract {
                                 RozpocznijPrzerwe przewe=event.getRozpocznijPrzerwe();
                                 Kasa kasaNAPrzerwe= Kasa.FindbyID(kasy,przewe.NumerKasy);
                                 kasaNAPrzerwe.CzyOtwarta=false;
-                                przerwaKasy=new PrzerwaKasy(kasaNAPrzerwe,20 + (int)(Math.random() * 40),fedamb.federateTime);
+                                Random rand2 = new Random();
+                                int czasprzer = 50 + rand2.nextInt(65);
+                                //przerwaKasy=new PrzerwaKasy(kasaNAPrzerwe,20 + (int)(Math.random() * 40),fedamb.federateTime);
+                                przerwaKasy=new PrzerwaKasy(kasaNAPrzerwe,czasprzer,fedamb.federateTime);
+                                czasNaPrzerwe=true;
                                 sendKasaToRTI(kasaNAPrzerwe.hendKasa,kasaNAPrzerwe);
                                 break;
                         }
@@ -103,7 +108,7 @@ public class KasaFederate extends FederateAbstract {
                 }
                 fedamb.externalEvents.clear();
             }
-            if(przerwaKasy!=null)
+            if(czasNaPrzerwe)
             {
                 if(przerwaKasy.kasa.Dlugosc==0&&przerwaKasy.KoniecPrzerwy==-1)
                     przerwaKasy.zakonczenieObslugiOstatniego(fedamb.federateTime);
@@ -114,6 +119,7 @@ public class KasaFederate extends FederateAbstract {
                         sendKasaToRTI(przerwaKasy.kasa.hendKasa,przerwaKasy.kasa);
                         sendZakonczeniePrzerwy(przerwaKasy);
                         przerwaKasy=null;
+                        czasNaPrzerwe=false;
                     } catch (RTIexception rtIexception) {
                         rtIexception.printStackTrace();
                     }
@@ -135,10 +141,13 @@ public class KasaFederate extends FederateAbstract {
             }
         }
         System.out.print("Zamykanie");
+        ogloszeniePunktuSynchronizacjiWyjscia(fedamb);
+        osiagnieciePunktuSynchronizacjiWyjscia(fedamb);
     }
     private void sendZakonczeniePrzerwy(PrzerwaKasy przerwaKasy)throws RTIexception
     {
-        ZakoczeniePrzerwy zakoczeniePrzerwy= new ZakoczeniePrzerwy((int) Math.round((przerwaKasy.KoniecPrzerwy-przerwaKasy.poczatekPrzerwy)),przerwaKasy.kasa.NumerKasy);
+        //ZakoczeniePrzerwy zakoczeniePrzerwy= new ZakoczeniePrzerwy((int) Math.round((przerwaKasy.KoniecPrzerwy-przerwaKasy.poczatekPrzerwy)),przerwaKasy.kasa.NumerKasy);
+        ZakoczeniePrzerwy zakoczeniePrzerwy= new ZakoczeniePrzerwy((int) Math.round(przerwaKasy.czasPrzerwy),przerwaKasy.kasa.NumerKasy);
         SuppliedParameters parameters =
                 RtiFactoryFactory.getRtiFactory().createSuppliedParameters();
         byte[] czasPrzerwy=zakoczeniePrzerwy.getCzasPrzerwyByte();
@@ -218,53 +227,6 @@ public class KasaFederate extends FederateAbstract {
                     zakonczObslugeKlienta(new ZakonczanieObslugiKlienta(kas.idKlientaOblugiwanego, czas),(fedamb.federateTime + fedamb.federateLookahead));
                 }
             }
-
-            /*
-            else
-            {
-                if(kas.czasZakonczeniaObslugi==fedamb.federateTime)
-                {
-                    int czas = (int) Math.round(kas.czasZakonczeniaObslugi-kas.czasRozpoczeciaObslugi);
-                    ZakonczanieObslugiKlienta zakonczanieObslugiKlienta =new ZakonczanieObslugiKlienta(kas.idKlientaOblugiwanego,czas);
-                    SuppliedParameters attributes=zakonczanieObslugiKlienta.getRTIAtributes(fedamb);
-                    LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
-                    rtiamb.sendInteraction(fedamb.publikacje.zakonczenieObslugiKlientaHandler.getZakonczenieObslugiKlientaHandler(), attributes, "tag".getBytes(), time );
-
-                }
-            }
-            */
-            //OLD
-            /*
-               int indexwLisiceklient= kliencjiWSklepie.mygetFirst(kas.NumerKasy);
-               if(indexwLisiceklient!=-1)
-               {
-                   int czasOczekiwania=1;
-                   kas.czyObsluguje=true;
-                   kas.czasRozpoczeciaObslugi=fedamb.federateTime;
-                   kas.czasZakonczeniaObslugi=fedamb.federateTime+czasOczekiwania;
-
-                   Klient najlepszy= kliencjiWSklepie.get(indexwLisiceklient);
-                   RozpoczecieObslugi rozpoczecieObslugi=new RozpoczecieObslugi(czasOczekiwania,kas.NumerKasy,najlepszy.IDKlienta);
-                   SuppliedParameters attributes=rozpoczecieObslugi.getRTIAtributes(fedamb);
-                   LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
-                   kas.idKlientaOblugiwanego=najlepszy.IDKlienta;
-                   rtiamb.sendInteraction(fedamb.publikacje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler(), attributes, "tag".getBytes(), time );
-                   //kliencjiWSklepie.remove(najlepszy);
-                    kliencjiWSklepie.RemoveByID(najlepszy.IDKlienta);
-                   kas.Dlugosc--;
-                   kas.CzyPelna=false;
-                   sendKasaToRTI(kas.hendKasa,kas);
-                   for (Klient kl:kliencjiWSklepie
-                           ) {
-                       System.out.print("kl222: "+kl);
-                   }
-                   System.out.println();
-
-
-               }
-
-
-            }*/
         }
     }
 
