@@ -109,24 +109,21 @@ public class KasaFederate extends FederateAbstract {
             if(!kas.czyObsluguje)
             {
                int indexwLisiceklient= kliencjiWSklepie.mygetFirst(kas.NumerKasy);
-               System.out.println("index na liscie klient"+indexwLisiceklient);
                if(indexwLisiceklient!=-1)
                {
-
-                   int czasObslugi=1;
+                   int czasOczekiwania=1;
                    kas.czyObsluguje=true;
                    kas.czasRozpoczeciaObslugi=fedamb.federateTime;
-                   kas.czasZakonczeniaObslugi=fedamb.federateTime+czasObslugi;
+                   kas.czasZakonczeniaObslugi=fedamb.federateTime+czasOczekiwania;
 
                    Klient najlepszy= kliencjiWSklepie.get(indexwLisiceklient);
-                   RozpoczecieObslugi rozpoczecieObslugi=new RozpoczecieObslugi(czasObslugi,kas.NumerKasy,najlepszy.IDKlienta);
+                   RozpoczecieObslugi rozpoczecieObslugi=new RozpoczecieObslugi(czasOczekiwania,kas.NumerKasy,najlepszy.IDKlienta);
                    SuppliedParameters attributes=rozpoczecieObslugi.getRTIAtributes(fedamb);
                    LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
                    kas.idKlientaOblugiwanego=najlepszy.IDKlienta;
                    rtiamb.sendInteraction(fedamb.publikacje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler(), attributes, "tag".getBytes(), time );
                    //kliencjiWSklepie.remove(najlepszy);
                     kliencjiWSklepie.RemoveByID(najlepszy.IDKlienta);
-                   System.out.println("Rozpoczyna Obsluge"+kas.NumerKasy+" Dlugosc "+kas.Dlugosc+"IDKlienta"+najlepszy.IDKlienta);
                    kas.Dlugosc--;
                    kas.CzyPelna=false;
                    sendKasaToRTI(kas.hendKasa,kas);
@@ -150,9 +147,7 @@ public class KasaFederate extends FederateAbstract {
                     SuppliedParameters attributes=zakonczanieObslugiKlienta.getRTIAtributes(fedamb);
                     LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
                     rtiamb.sendInteraction(fedamb.publikacje.zakonczenieObslugiKlientaHandler.getZakonczenieObslugiKlientaHandler(), attributes, "tag".getBytes(), time );
-
                     log("Zakonczono obsluge:"+kas.idKlientaOblugiwanego+" kasa:"+kas.NumerKasy+" czas obslugi:"+czas);
-                    kas.czyObsluguje=false;
                 }
             }
         }
