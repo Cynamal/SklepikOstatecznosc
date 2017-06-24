@@ -6,7 +6,7 @@ package federacje.statystyka;
 public class SredniCzasOczekiwania {
    public int IDKlienta;
    public double CzasWejsciaDoKolejki;
-   public double CzasWyjsciaZKolejki;
+   public double CzasWyjsciaZKolejki=-1;
    public SredniCzasOczekiwania(int IDKlienta,double CzasWejsciaDoKolejki)
    {
        this.IDKlienta=IDKlienta;

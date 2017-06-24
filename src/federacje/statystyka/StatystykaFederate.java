@@ -91,7 +91,7 @@ public class StatystykaFederate extends FederateAbstract {
             System.out.println("Srednia ilosc gotowki: " + Math.round(iloscGotowki/liczbaKlientowWSklepie));
         if(liczbaKlientowWKolejce!=0)
             System.out.println("Sredni czas zakupow: " + Math.round(czasZakupow/liczbaKlientowWKolejce));
-        System.out.println("Sredni czas oczekiwania: " +listSredniCzasOczekiwania.ObliczSredni());
+        System.out.printf("Sredni czas oczekiwania: %.2f\n",listSredniCzasOczekiwania.ObliczSredni());
         if(liczbaObsluzonych!=0)
             System.out.println("Sredni czas obslugi: " + Math.round(czasObslugi/liczbaObsluzonych));
         if(liczbaPrzerw!=0)
@@ -183,6 +183,8 @@ public class StatystykaFederate extends FederateAbstract {
 
         }
         System.out.println("Konczenie symulacji");
+        ogloszeniePunktuSynchronizacjiWyjscia(fedamb);
+        osiagnieciePunktuSynchronizacjiWyjscia(fedamb);
         try
         {
             if(!this.isRunning)
@@ -191,6 +193,7 @@ public class StatystykaFederate extends FederateAbstract {
         {
             e.printStackTrace();
         }
+      //  PotwierdzenieWyjscia();
     }
     public static void main(String[] args) {
         new StatystykaFederate().runFederate();
@@ -212,5 +215,6 @@ public class StatystykaFederate extends FederateAbstract {
         fedamb.subskrypcje.subscribeRozpoczecieObslugi(rtiamb);
         fedamb.subskrypcje.subscribeZakonczanieObslugiKlienta(rtiamb);
         fedamb.subskrypcje.subscribeZakoczeniePrzerwy(rtiamb);
+        fedamb.subskrypcje.subscribeWejscieDoKolejki(rtiamb);
     }
 }

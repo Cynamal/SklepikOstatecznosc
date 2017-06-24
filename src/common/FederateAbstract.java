@@ -94,6 +94,7 @@ public class FederateAbstract  {
         czekajAzWszyscySieUruchomia();
         osiagnieciePunktuSynchronizacji(fedamb);
         ustawianiePolitykiCzasowej(fedamb);
+
     }
     private void dolaczenieDoFederacji(String federateName,AmbasadorAbstract fedamb){
         try {
@@ -114,7 +115,16 @@ public class FederateAbstract  {
             e.printStackTrace();
         }
     }
-
+    protected void PotwierdzenieWyjscia() {
+        log(" >>>>>>>>>> Press Enter to Exit <<<<<<<<<<");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            reader.readLine();
+        } catch (Exception e) {
+            log("Error while waiting for user input: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
     private void osiagnieciePunktuSynchronizacji(AmbasadorAbstract fedamb) {
         try {
             rtiamb.synchronizationPointAchieved(READY_TO_RUN);
@@ -148,7 +158,7 @@ public class FederateAbstract  {
             synchronizationLabelNotAnnounced.printStackTrace();
         }
         log("Osiągnięto punkt synchronizacji: " + READY_TO_STOP + ", czekanie na federacje...");
-        while (!fedamb.isReadyToRun) {
+        while (!fedamb.isReadyToStop) {
             try {
                 rtiamb.tick();
             } catch (RTIinternalError | ConcurrentAccessAttempted rtIinternalError) {
@@ -161,10 +171,10 @@ public class FederateAbstract  {
         try {
             rtiamb.registerFederationSynchronizationPoint(READY_TO_STOP, null);
         } catch (FederateNotExecutionMember | SaveInProgress | RTIinternalError | RestoreInProgress | ConcurrentAccessAttempted federateNotExecutionMember) {
-            federateNotExecutionMember.printStackTrace();
+          //  federateNotExecutionMember.printStackTrace();
         }
 
-        while (!fedamb.isAnnounced) {
+        while (!fedamb.isAnnounced2) {
             try {
                 rtiamb.tick();
             } catch (RTIinternalError | ConcurrentAccessAttempted rtIinternalError) {

@@ -17,12 +17,14 @@ import java.util.Map;
 public class AmbasadorAbstract extends NullFederateAmbassador {
     public static final String federationName = "FederacjaSklepowa";
     public static final String READY_TO_RUN = "ReadyToRun";
+    public static final String READY_TO_STOP = "ReadyToStop";
     public Publikacje publikacje= new Publikacje();
     public Subskrypcje subskrypcje= new Subskrypcje();
     public double federateLookahead = 1.0;
     public double federateTime = 0.0;
     public boolean Started=false;
     public boolean isAnnounced = false;
+    public boolean isAnnounced2 = false;
     public boolean isReadyToRun = false;
     public boolean isRegulating = false;
     public boolean isConstrained = false;
@@ -31,6 +33,8 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
 
     public ArrayList<ExternalEventAbstract> externalEvents = new ArrayList<>();
     private java.util.List<Map.Entry<String, Integer>> pairList = new java.util.ArrayList<>();
+    public boolean isReadyToStop=false;
+
     private static void log (String x){
         System.out.println(x);
 
@@ -48,12 +52,16 @@ public class AmbasadorAbstract extends NullFederateAmbassador {
         log("Synchronization point announced: " + label);
         if (label.equals(READY_TO_RUN))
             this.isAnnounced = true;
+        if(label.equals(READY_TO_STOP))
+            this.isAnnounced2=true;
     }
 
     public void federationSynchronized(String label) {
         log("Federation Synchronized: " + label);
         if (label.equals(READY_TO_RUN))
             this.isReadyToRun = true;
+        if(label.equals(READY_TO_STOP))
+            this.isReadyToStop=true;
     }
 
     public double getFederateTime() {

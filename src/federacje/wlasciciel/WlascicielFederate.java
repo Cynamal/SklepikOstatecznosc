@@ -85,6 +85,7 @@ public class WlascicielFederate extends FederateAbstract {
         System.out.print("Zamykanie");
         ogloszeniePunktuSynchronizacjiWyjscia(fedamb);
         osiagnieciePunktuSynchronizacjiWyjscia(fedamb);
+     //   PotwierdzenieWyjscia();
     }
     public static void main(String[] args) {
         new WlascicielFederate().runFederate();

@@ -16,10 +16,17 @@ public class ListSredniCzasOczekiwania extends LinkedList<SredniCzasOczekiwania>
     public double ObliczSredni()
     {
         int suma=0;
+        int iter=0;
         for (SredniCzasOczekiwania sr: this
                 ) {
-            suma+=sr.CzasWyjsciaZKolejki-sr.CzasWejsciaDoKolejki;
+            if(sr.CzasWyjsciaZKolejki!=-1.0)
+            {
+                suma+=sr.CzasWyjsciaZKolejki-sr.CzasWejsciaDoKolejki;
+                iter++;
+            }
+
         }
-        return 1.0*suma/(1.0*this.size());
+       // System.out.println("sume: "+suma+" iter: "+iter+" Rozmiar listy: "+this.size());
+        return 1.0*suma/(1.0*iter);
     }
 }
