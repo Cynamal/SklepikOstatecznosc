@@ -1,7 +1,9 @@
 package federacje.kasa;
 
-import Interactions.WejscieDoKolejki;
-import Interactions.ZakonczanieObslugiKlienta;
+import Interactions.*;
+
+import Interactions.ZakoczeniePrzerwy;
+
 import common.AmbasadorAbstract;
 import common.ExternalEventAbstract;
 import common.FederateAbstract;
@@ -13,6 +15,7 @@ import hla.rti.jlc.RtiFactoryFactory;
 import objects.Kasa;
 import objects.Klient;
 import objects.ListaKlientow;
+import statistic.Obj.EvRozpoczecieObslugi;
 
 import java.util.Collections;
 
@@ -86,7 +89,11 @@ public class KasaFederate extends FederateAbstract {
                 }
                 fedamb.externalEvents.clear();
             }
-                RozpocznijObsluge();
+            try {
+                RozpocznijObslugelubZakoncz();
+            } catch (RTIexception rtIexception) {
+                rtIexception.printStackTrace();
+            }
             try {
                 advanceTime(1.0,fedamb);
             } catch (RTIexception rtIexception) {
@@ -95,10 +102,42 @@ public class KasaFederate extends FederateAbstract {
         }
     }
 
-    private void RozpocznijObsluge() {
+    private void RozpocznijObslugelubZakoncz() throws RTIexception{
+
         for (Kasa kas: kasy
              ) {
-            if()
+            if(!kas.czyObsluguje)
+            {
+               int indexwLisiceklient= kliencjiWSklepie.mygetFirst(kas.NumerKasy);
+               if(indexwLisiceklient!=-1)
+               {
+                   int czasOczekiwania=6;
+                   kas.czyObsluguje=true;
+                   kas.czasRozpoczeciaObslugi=fedamb.federateTime;
+                   kas.czasZakonczeniaObslugi=fedamb.federateTime+czasOczekiwania;
+
+                   Klient najlepszy= kliencjiWSklepie.get(indexwLisiceklient);
+                   RozpoczecieObslugi rozpoczecieObslugi=new RozpoczecieObslugi(czasOczekiwania,kas.NumerKasy,najlepszy.IDKlienta);
+                   SuppliedParameters attributes=rozpoczecieObslugi.getRTIAtributes(fedamb);
+                   LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
+                   kas.idKlientaOblugiwanego=najlepszy.IDKlienta;
+                   rtiamb.sendInteraction(fedamb.publikacje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler(), attributes, "tag".getBytes(), time );
+                   //#TODO dodac uwuanie klienta
+               }
+
+
+            }
+            else
+            {
+                if(kas.czasZakonczeniaObslugi==fedamb.federateTime)
+                {
+                    int czas = (int) Math.round(kas.czasZakonczeniaObslugi-kas.czasRozpoczeciaObslugi);
+                    ZakonczanieObslugiKlienta zakonczanieObslugiKlienta =new ZakonczanieObslugiKlienta(kas.idKlientaOblugiwanego,czas);
+                    SuppliedParameters attributes=zakonczanieObslugiKlienta.getRTIAtributes(fedamb);
+                    LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
+                    rtiamb.sendInteraction(fedamb.publikacje.zakonczenieObslugiKlientaHandler.getZakonczenieObslugiKlientaHandler(), attributes, "tag".getBytes(), time );
+                }
+            }
         }
     }
 

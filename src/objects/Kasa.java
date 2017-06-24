@@ -19,6 +19,7 @@ public class Kasa {
     public boolean CzyOtwarta;
     public static int MaxSizeofQiue=10;
     public int hendKasa;
+    public int idKlientaOblugiwanego= -1;
     public boolean czyObsluguje=false;
     public double czasRozpoczeciaObslugi;
     public double czasZakonczeniaObslugi;
