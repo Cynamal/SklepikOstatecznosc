@@ -42,8 +42,8 @@ public class RozpoczecieObslugi {
         byte[] NumerKasy = getCzasOczekiwaniaByte();
         byte[] IDKlienta = getNumerKasyByte();
 
-        attributes.add(fedamb.publikacje.rozpoczecieObslugiHandler.CzasOczekiwaniaHandler, CzasOczekiwania);
         attributes.add(fedamb.publikacje.rozpoczecieObslugiHandler.NumerKasyHandler, NumerKasy);
+        attributes.add(fedamb.publikacje.rozpoczecieObslugiHandler.CzasOczekiwaniaHandler, CzasOczekiwania);
         attributes.add(fedamb.publikacje.rozpoczecieObslugiHandler.IDKlientaHandler, IDKlienta);
 
         return attributes;

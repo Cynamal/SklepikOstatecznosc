@@ -92,13 +92,13 @@ public class KasaFederate extends FederateAbstract {
                 }
                 fedamb.externalEvents.clear();
             }
-            /*
+
             try {
                 RozpocznijObslugelubZakoncz();
             } catch (RTIexception rtIexception) {
                 rtIexception.printStackTrace();
             }
-            */
+
             try {
                 advanceTime(1.0,fedamb);
             } catch (RTIexception rtIexception) {
@@ -107,12 +107,51 @@ public class KasaFederate extends FederateAbstract {
         }
     }
 
+    private void rozpocznijObslugeKlienta(RozpoczecieObslugi rozp,double timeStep)throws RTIexception
+    {
+        SuppliedParameters parameters =
+                RtiFactoryFactory.getRtiFactory().createSuppliedParameters();
+        byte[] NumerKasy=rozp.getNumerKasyByte();
+        byte[] CzasObslugi=rozp.getCzasOczekiwaniaByte();
+        byte[] ID=rozp.getIDKlientaByte();
+
+        parameters.add(fedamb.publikacje.rozpoczecieObslugiHandler.NumerKasyHandler,NumerKasy);
+        parameters.add(fedamb.publikacje.rozpoczecieObslugiHandler.CzasOczekiwaniaHandler,CzasObslugi);
+        parameters.add(fedamb.publikacje.rozpoczecieObslugiHandler.IDKlientaHandler,ID);
+
+        LogicalTime time = convertTime( timeStep );
+        rtiamb.sendInteraction(fedamb.publikacje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler(), parameters, "rozpocznijObsluge".getBytes(), time );
+    }
+
     private void RozpocznijObslugelubZakoncz() throws RTIexception{
 
         for (Kasa kas: kasy
              ) {
-            if(!kas.czyObsluguje)
-            {
+            if(!kas.czyObsluguje) {
+                if (!kas.kolejkaDOKASI.CzyPusta()) {
+                    kas.czyObsluguje = true;
+                    int czasObslugi = 25; //TUTAJ RANDOM!!!!!!!!!!!
+                    Klient pierwszy = kas.kolejkaDOKASI.getAndDeleteFirst();
+                    kas.czasRozpoczeciaObslugi = fedamb.federateTime;
+                    kas.czasZakonczeniaObslugi = fedamb.federateTime + czasObslugi;
+                    //RozpoczecieObslugi rozp = new RozpoczecieObslugi(czasObslugi,kas.NumerKasy,pierwszy.IDKlienta);
+                    //SuppliedParameters parameters = RtiFactoryFactory.getRtiFactory().createSuppliedParameters();
+                    //byte[] NumerKasy=rozp.getNumerKasyByte();
+                    //byte[] CzasOczekiwana=rozp.getCzasOczekiwaniaByte();
+                    //byte[] ID=rozp.getIDKlientaByte();
+                    //parameters.add(fedamb.publikacje.zakonczenieObslugiKlientaHandler.CzasObslugiHandler,NumerKasy);
+                    //parameters.add(fedamb.publikacje.zakonczenieObslugiKlientaHandler.CzasObslugiHandler,CzasOczekiwana);
+                    //parameters.add(fedamb.publikacje.zakonczenieObslugiKlientaHandler.IDKlientaHandler,ID);
+                    //LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
+                    kas.idKlientaOblugiwanego=pierwszy.IDKlienta;
+                    rozpocznijObslugeKlienta(new RozpoczecieObslugi(czasObslugi,kas.NumerKasy,pierwszy.IDKlienta),(fedamb.federateTime + fedamb.federateLookahead));
+                    sendKasaToRTI(kas.hendKasa,kas);
+                    //rtiamb.sendInteraction(fedamb.publikacje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler(), parameters, "rozpoczecieObslugi".getBytes(), time );
+                    //usuniecie klienta kolejki
+                }
+            }
+            //OLD
+            /*
                int indexwLisiceklient= kliencjiWSklepie.mygetFirst(kas.NumerKasy);
                if(indexwLisiceklient!=-1)
                {
@@ -155,6 +194,7 @@ public class KasaFederate extends FederateAbstract {
                     log("Zakonczono obsluge:"+kas.idKlientaOblugiwanego+" kasa:"+kas.NumerKasy+" czas obslugi:"+czas);
                 }
             }
+            */
         }
     }
 

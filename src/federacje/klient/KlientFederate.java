@@ -37,8 +37,6 @@ public class KlientFederate extends FederateAbstract {
                 Collections.sort(fedamb.externalEvents, new ExternalEventAbstract.ExternalEventComparator());
                 for (ExternalEventAbstract event : fedamb.externalEvents) {
                     try {
-
-
                         // System.out.println("w for");
                         switch (event.getEventType()) {
 
@@ -51,7 +49,8 @@ public class KlientFederate extends FederateAbstract {
                                 break;
                             case RozpoczecieObslugi:
                                 RozpoczecieObslugi rozpoczecieObslugi= event.getRozpoczecieObslugi();
-                                UpdateQue(rozpoczecieObslugi.NumerKasy);
+
+                                //UpdateQue(rozpoczecieObslugi.NumerKasy); TUTAJ UPDATE JAK OBSLUGUJE
                                 break;
                         }
                     } catch (Exception e) {
@@ -97,7 +96,7 @@ public class KlientFederate extends FederateAbstract {
                 }
                 else {
                     aktywne.get(indexKasi).kolejkaDOKASI.add(kl);
-                    DoWywalenia.add(kl);
+                    //DoWywalenia.add(kl);
                     //kliencjiWSklepie.remove(kl);
                     try {
                         UpdateKlienttoRTI(kl.hendler,kl);
@@ -111,10 +110,10 @@ public class KlientFederate extends FederateAbstract {
                 }
             }
         }
-        for (Klient kl:DoWywalenia
-                ) {
-            kliencjiWSklepie.remove(kl);
-        }
+        //for (Klient kl:DoWywalenia
+        //        ) {
+        //    kliencjiWSklepie.remove(kl);
+        //}
     }
     private void wchodzenieDokolejki() {
         ListaKlientow DoWywalenia= new ListaKlientow(Integer.MAX_VALUE);
