@@ -225,53 +225,6 @@ public class KasaFederate extends FederateAbstract {
                     zakonczObslugeKlienta(new ZakonczanieObslugiKlienta(kas.idKlientaOblugiwanego, czas),(fedamb.federateTime + fedamb.federateLookahead));
                 }
             }
-
-            /*
-            else
-            {
-                if(kas.czasZakonczeniaObslugi==fedamb.federateTime)
-                {
-                    int czas = (int) Math.round(kas.czasZakonczeniaObslugi-kas.czasRozpoczeciaObslugi);
-                    ZakonczanieObslugiKlienta zakonczanieObslugiKlienta =new ZakonczanieObslugiKlienta(kas.idKlientaOblugiwanego,czas);
-                    SuppliedParameters attributes=zakonczanieObslugiKlienta.getRTIAtributes(fedamb);
-                    LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
-                    rtiamb.sendInteraction(fedamb.publikacje.zakonczenieObslugiKlientaHandler.getZakonczenieObslugiKlientaHandler(), attributes, "tag".getBytes(), time );
-
-                }
-            }
-            */
-            //OLD
-            /*
-               int indexwLisiceklient= kliencjiWSklepie.mygetFirst(kas.NumerKasy);
-               if(indexwLisiceklient!=-1)
-               {
-                   int czasOczekiwania=1;
-                   kas.czyObsluguje=true;
-                   kas.czasRozpoczeciaObslugi=fedamb.federateTime;
-                   kas.czasZakonczeniaObslugi=fedamb.federateTime+czasOczekiwania;
-
-                   Klient najlepszy= kliencjiWSklepie.get(indexwLisiceklient);
-                   RozpoczecieObslugi rozpoczecieObslugi=new RozpoczecieObslugi(czasOczekiwania,kas.NumerKasy,najlepszy.IDKlienta);
-                   SuppliedParameters attributes=rozpoczecieObslugi.getRTIAtributes(fedamb);
-                   LogicalTime time = convertTime(fedamb.federateTime + fedamb.federateLookahead);
-                   kas.idKlientaOblugiwanego=najlepszy.IDKlienta;
-                   rtiamb.sendInteraction(fedamb.publikacje.rozpoczecieObslugiHandler.getRozpoczecieObslugiHandler(), attributes, "tag".getBytes(), time );
-                   //kliencjiWSklepie.remove(najlepszy);
-                    kliencjiWSklepie.RemoveByID(najlepszy.IDKlienta);
-                   kas.Dlugosc--;
-                   kas.CzyPelna=false;
-                   sendKasaToRTI(kas.hendKasa,kas);
-                   for (Klient kl:kliencjiWSklepie
-                           ) {
-                       System.out.print("kl222: "+kl);
-                   }
-                   System.out.println();
-
-
-               }
-
-
-            }*/
         }
     }
 
