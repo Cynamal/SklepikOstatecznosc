@@ -50,33 +50,21 @@ public class StatystykaFederate extends FederateAbstract {
         }
     }
 
-    public int sredniCzasZakupow(){
-        return czasZakupow/liczbaKlientowWKolejce;
-    }
-
-    public int sredniaIloscGotowki(){
-        return iloscGotowki/liczbaKlientowWSklepie;
-    }
-
-    public int sredniCzasObslugi(){
-        return czasObslugi/liczbaObsluzonych;
-    }
-
-    public int sredniCzasPrzerwy(){
-        return czasPrzerw/liczbaPrzerw;
-    }
-
     public void wypisanieStatystyk(){
         System.out.println("*********************************************************");
         System.out.println("************************STATYSTYKA***********************");
         System.out.println("*********************************************************");
         System.out.println("Liczba otwartych kas: " + liczbaKas);
         System.out.println("Laczna liczba klientow w sklepie: " + liczbaKlientowWSklepie);
-        System.out.println("Srednia ilosc gotowki: " + sredniaIloscGotowki());
-        System.out.println("Sredni czas zakupow: " + sredniCzasZakupow());
+        if(liczbaKlientowWSklepie!=0)
+            System.out.println("Srednia ilosc gotowki: " + Math.round(iloscGotowki/liczbaKlientowWSklepie));
+        if(liczbaKlientowWKolejce!=0)
+            System.out.println("Sredni czas zakupow: " + Math.round(czasZakupow/liczbaKlientowWKolejce));
         System.out.println("Sredni czas oczekiwania: " );
-        System.out.println("Sredni czas obslugi: " + sredniCzasObslugi());
-        System.out.println("Sredni czas przerwy: " + sredniCzasPrzerwy());
+        if(liczbaObsluzonych!=0)
+            System.out.println("Sredni czas obslugi: " + Math.round(czasObslugi/liczbaObsluzonych));
+        if(liczbaPrzerw!=0)
+        System.out.println("Sredni czas przerwy: " + Math.round(czasPrzerw/liczbaPrzerw));
         System.out.println("*********************************************************");
     }
 

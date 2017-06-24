@@ -130,7 +130,7 @@ public class GUIFederate extends FederateAbstract {
 
                     }
                 }
-                czekajAzWszyscySieUruchomia();
+                //czekajAzWszyscySieUruchomia();
                 fedamb.externalEvents.clear();
             }
             try {
