@@ -110,7 +110,10 @@ public class GUIFederate extends FederateAbstract {
                                 break;
                             case ZakonczanieObslugiKlienta:
                                 ZakonczanieObslugiKlienta zak = event.getZakonczanieObslugiKlienta();
-                                logowanieDzialania("Klient"+czyKlientUprzywilejowany(zak.IDKlienta)+" o ID " + zak.IDKlienta + " zostal obsluzony i opuscil sklep. Czas obslugi trwal " + zak.CzasObslugi);
+                                Kasa kas= Kasa.FindbyIDkl(kasy,zak.IDKlienta);
+                                kas.czyObsluguje=false;
+                                kas.idKlientaOblugiwanego=-1;
+                                logowanieDzialania("Klient"+czyKlientUprzywilejowany(zak.IDKlienta)+" o ID " + zak.IDKlienta + " zostal obsluzony przez kase o numerze "+kas.NumerKasy+" i opuscil sklep. Czas obslugi trwal " + zak.CzasObslugi);
                                 log("Zakonczenie obslugi klienta: " + zak);
                                 klientOpuscilSklep();
                                 break;
@@ -126,6 +129,9 @@ public class GUIFederate extends FederateAbstract {
                                 break;
                             case RozpoczecieObslugi:
                                 RozpoczecieObslugi roz = event.getRozpoczecieObslugi();
+                                Kasa kas2= Kasa.FindbyID(kasy,roz.NumerKasy);
+                                        kas2.czyObsluguje=true;
+                                        kas2.idKlientaOblugiwanego=roz.IDKlienta;
                                 logowanieDzialania("Kasa o numerze "+roz.NumerKasy+" rozpoczela obsluge klienta"+czyKlientUprzywilejowany(roz.IDKlienta)+" o ID "+roz.IDKlienta+". Czas oczekiwania klienta w kolejce wynosil "+roz.CzasOczekiwania);
                                 break;
                             case RozpocznijPrzerwe:

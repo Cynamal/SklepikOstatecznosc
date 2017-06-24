@@ -289,20 +289,35 @@ public static boolean addorChangeIfExistClientToListOfKasaorKlientList(Klient kl
     }
     @Override
     public String toString() {
-        String pelna= " i pelana";
+        String pelna= "/pelna";
         String otwarta="zamknieta";
         if(CzyOtwarta)
             otwarta="otwarta";
 
         if(!CzyPelna)
             pelna="";
-        return "Kasa o numerze:"+NumerKasy+" Dlugos kolejki:"+Dlugosc+" jest "+otwarta+pelna;
+        String obsluga="";
+        if(czyObsluguje)
+        {
+            obsluga=" ID klienta: "+idKlientaOblugiwanego;
+        }
+
+
+        return "Kasa o numerze: "+NumerKasy+" Dlugosc kolejki: "+Dlugosc+" Status: "+otwarta+pelna+obsluga ;
     }
     public static Kasa FindbyID(LinkedList<Kasa> kasy,int numerKasy) throws Exception
     {
         for (Kasa ret:kasy
              ) {
             if(ret.NumerKasy==numerKasy) return ret;
+        }
+        throw new Exception("Nie znaleziono kasy");
+    }
+    public static Kasa FindbyIDkl(LinkedList<Kasa> kasy,int numerKl) throws Exception
+    {
+        for (Kasa ret:kasy
+                ) {
+            if(ret.idKlientaOblugiwanego==numerKl) return ret;
         }
         throw new Exception("Nie znaleziono kasy");
     }
