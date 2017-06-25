@@ -24,6 +24,13 @@ public class ListaKlientowv2 extends LinkedList<Klient> {
         klient.NumerKolejki=this.NumerKolejki;
         this.add(klient);
     }
+    public Klient addKlientv2(Klient klient)
+    {
+        klient.NumerWKolejce=iteratorKlienta++;
+        klient.NumerKolejki=this.NumerKolejki;
+        this.add(klient);
+        return klient;
+    }
     public boolean CzySaUprzywilejowani()
     {
         for (Klient kl:this

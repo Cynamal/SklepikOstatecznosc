@@ -121,7 +121,8 @@ public class KlientFederate extends FederateAbstract {
                     kl.czasZakonczeniaZakupow+=3;
                 }
                 else {
-                    aktywne.get(indexKasi).kolejkaDOKASI.add(kl);
+                    kl = aktywne.get(indexKasi).kolejkaDOKASI.addKlientv2(kl);
+                    kl.NumerKolejki=aktywne.get(indexKasi).NumerKasy;
                     //DoWywalenia.add(kl);
                     //kliencjiWSklepie.remove(kl);
                     try {
