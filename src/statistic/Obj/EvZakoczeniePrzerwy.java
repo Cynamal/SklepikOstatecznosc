@@ -1,5 +1,7 @@
 package statistic.Obj;
 
+import Interactions.ZakoczeniePrzerwy;
+
 /**
  * Created by Karolina on 23.06.2017.
  */
@@ -10,5 +12,13 @@ public class EvZakoczeniePrzerwy {
     {
         this.czas=czas;
         this.zakoczeniePrzerwy=zakoczeniePrzerwy;
+    }
+
+    public double getCzas() {
+        return czas;
+    }
+
+    public ZakoczeniePrzerwy getZakoczeniePrzerwy() {
+        return zakoczeniePrzerwy;
     }
 }

@@ -13,4 +13,12 @@ public class UpdateKlient {
         this.time=time;
         this.klient=klient;
     }
+
+    public double getTime() {
+        return time;
+    }
+
+    public Klient getKlient() {
+        return klient;
+    }
 }

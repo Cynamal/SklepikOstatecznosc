@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import statistic.Colections.*;
 
 import javax.swing.*;
 import java.io.FileOutputStream;
@@ -20,8 +21,18 @@ public class Exporter {
 
     private XSSFWorkbook wb;
 
-    public Exporter(ListSredniCzasOczekiwania listSredniCzasOczekiwania)
+    public Exporter(ListSredniCzasOczekiwania listSredniCzasOczekiwania,RozpoczeciaOblugi rozp,RozpoczeciaPrzerwy rozpoczeciaPrzerwy,
+                    UpdateKasaList updateKasaList,UpdateKlientList updateKlientList,WejsciaDoKolejki wejsciaDoKolejki,
+                    ZadaniaUruchomieniaKasy zadaniaUruchomieniaKasy,ZakoczeniaPrzerwy zakoczeniaPrzerwy,ZakonczeniaObslugiKliena zakonczeniaObslugiKliena)
     {
+        this.zakonczeniaObslugiKliena=zakonczeniaObslugiKliena;
+        this.zakoczeniaPrzerwy=zakoczeniaPrzerwy;
+        this.zadaniaUruchomieniaKasy=zadaniaUruchomieniaKasy;
+        this.wejsciaDoKolejki=wejsciaDoKolejki;
+        this.updateKlientList=updateKlientList;
+        this.updateKasaList=updateKasaList;
+        this.rozpoczeciaOblugi=rozp;
+        this.rozpoczeciaPrzerwy=rozpoczeciaPrzerwy;
         li=listSredniCzasOczekiwania;
         chozeDirectorySwing();
 
@@ -147,9 +158,144 @@ public class Exporter {
         styles=createStyles(wb);
 
         if(li!=null)exportSredniCzasOczekiwania();
+       if(rozpoczeciaOblugi!=null) exportRozpoczeciaOblugi();
+       if(rozpoczeciaPrzerwy!=null)exportRozpoczeciaPrzerwy();
+        if(updateKasaList!=null)exportKasaUpdate();
+        if(updateKlientList!=null)exportKlientUpdate();
+        if(wejsciaDoKolejki!=null)exportWejsciaDoKolejki();
+        if(zadaniaUruchomieniaKasy!=null)exportZadaniaUruchomieniaKasy();
+        if(zakoczeniaPrzerwy!=null)exportZakoczeniaPrzerwy();
+        if(zakonczeniaObslugiKliena!=null)exportZakonczeniaObslugiKliena();
+
         Save();
     }
     ListSredniCzasOczekiwania li;
+    RozpoczeciaOblugi rozpoczeciaOblugi;
+    UpdateKasaList updateKasaList;
+    UpdateKlientList updateKlientList;
+    WejsciaDoKolejki wejsciaDoKolejki;
+    ZadaniaUruchomieniaKasy zadaniaUruchomieniaKasy;
+    ZakoczeniaPrzerwy zakoczeniaPrzerwy;
+    ZakonczeniaObslugiKliena zakonczeniaObslugiKliena;
+
+
+    private void exportZakonczeniaObslugiKliena()
+    {
+        Sheet sheet = wb.createSheet("ZakonczeniaObslugiKliena");
+        defPrintSetup(sheet);
+        int rownum=0;
+        rownum= createTitleRowData(rownum,sheet ,"$A$1:$E$1");
+        LinkedList<String> hedders= new LinkedList<>();
+        hedders.add("Czas");
+        hedders.add("IDKlienta");
+        hedders.add("CzasObslugi");
+
+        rownum= createHedders(rownum,sheet ,hedders);
+        rownum= zakonczeniaObslugiKliena.ExportData(rownum,sheet,styles);
+    }
+    private void exportZakoczeniaPrzerwy()
+    {
+        Sheet sheet = wb.createSheet("ZakoczeniaPrzerwy");
+        defPrintSetup(sheet);
+        int rownum=0;
+        rownum= createTitleRowData(rownum,sheet ,"$A$1:$E$1");
+        LinkedList<String> hedders= new LinkedList<>();
+        hedders.add("Czas");
+        hedders.add("CzasPrzerwy");
+        hedders.add("NumerKasy");
+
+        rownum= createHedders(rownum,sheet ,hedders);
+        rownum= zakoczeniaPrzerwy.ExportData(rownum,sheet,styles);
+    }
+    private void exportZadaniaUruchomieniaKasy()
+    {
+        Sheet sheet = wb.createSheet("ZadaniaUruchomieniaKasy");
+        defPrintSetup(sheet);
+        int rownum=0;
+        rownum= createTitleRowData(rownum,sheet ,"$A$1:$E$1");
+        LinkedList<String> hedders= new LinkedList<>();
+        hedders.add("Czas");
+        rownum= createHedders(rownum,sheet ,hedders);
+        rownum= zadaniaUruchomieniaKasy.ExportData(rownum,sheet,styles);
+    }
+    private void exportWejsciaDoKolejki()
+    {
+        Sheet sheet = wb.createSheet("WejsciaDoKolejki");
+        defPrintSetup(sheet);
+        int rownum=0;
+        rownum= createTitleRowData(rownum,sheet ,"$A$1:$E$1");
+        LinkedList<String> hedders= new LinkedList<>();
+        hedders.add("Czas");
+        hedders.add("IDKlienta");
+        hedders.add("CzasZakupow");
+        hedders.add("NumerKasy");
+
+        rownum= createHedders(rownum,sheet ,hedders);
+        rownum= wejsciaDoKolejki.ExportData(rownum,sheet,styles);
+    }
+
+
+    private void exportKlientUpdate()
+    {
+        Sheet sheet = wb.createSheet("Klient");
+        defPrintSetup(sheet);
+        int rownum=0;
+        rownum= createTitleRowData(rownum,sheet ,"$A$1:$E$1");
+        LinkedList<String> hedders= new LinkedList<>();
+        hedders.add("Czas");
+        hedders.add("IDKlienta");
+        hedders.add("Gotowka");
+        hedders.add("NumerKolejki");
+        hedders.add("NumerWKolejce");
+        hedders.add("uprzywilejowany");
+        rownum= createHedders(rownum,sheet ,hedders);
+        rownum= updateKlientList.ExportData(rownum,sheet,styles);
+    }
+    private void exportKasaUpdate()
+    {
+        Sheet sheet = wb.createSheet("Kasa");
+        defPrintSetup(sheet);
+        int rownum=0;
+        rownum= createTitleRowData(rownum,sheet ,"$A$1:$E$1");
+        LinkedList<String> hedders= new LinkedList<>();
+        hedders.add("Czas");
+        hedders.add("Numer Kasy");
+        hedders.add("Dlugosc");
+        hedders.add("CzyPelna");
+        hedders.add("CzyOtwarta");
+
+        rownum= createHedders(rownum,sheet ,hedders);
+        rownum= updateKasaList.ExportData(rownum,sheet,styles);
+    }
+
+    private void exportRozpoczeciaOblugi()
+    {
+        Sheet sheet = wb.createSheet("rozpoczeciaOblugi");
+        defPrintSetup(sheet);
+        int rownum=0;
+        rownum= createTitleRowData(rownum,sheet ,"$A$1:$E$1");
+        LinkedList<String> hedders= new LinkedList<>();
+        hedders.add("Czas");
+        hedders.add("Numer Kasy");
+        hedders.add("IDKlienta");
+
+        rownum= createHedders(rownum,sheet ,hedders);
+        rownum= rozpoczeciaOblugi.ExportData(rownum,sheet,styles);
+    }
+    RozpoczeciaPrzerwy rozpoczeciaPrzerwy;
+    private void exportRozpoczeciaPrzerwy()
+    {
+        Sheet sheet = wb.createSheet("RozpoczeciaPrzerwy");
+        defPrintSetup(sheet);
+        int rownum=0;
+        rownum= createTitleRowData(rownum,sheet ,"$A$1:$E$1");
+        LinkedList<String> hedders= new LinkedList<>();
+        hedders.add("Czas");
+        hedders.add("Numer Kasy");
+
+        rownum= createHedders(rownum,sheet ,hedders);
+        rownum= rozpoczeciaPrzerwy.ExportData(rownum,sheet,styles);
+    }
     private void exportSredniCzasOczekiwania()
     {
         Sheet sheet = wb.createSheet("SredniCzasOczekiwania");

@@ -9,4 +9,9 @@ public class ZadanieUruchomieniaKasy {
     {
         this.time=time;
     }
+
+    public double getTime() {
+        return time;
+    }
+
 }

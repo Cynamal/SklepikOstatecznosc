@@ -13,4 +13,12 @@ public class UpdateKasa {
         this.time=time;
         this.kasa=kasa;
     }
+
+    public double getTime() {
+        return time;
+    }
+
+    public Kasa getKasa() {
+        return kasa;
+    }
 }

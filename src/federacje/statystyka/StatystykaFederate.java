@@ -204,11 +204,7 @@ public class StatystykaFederate extends FederateAbstract {
         }
       //  PotwierdzenieWyjscia();
         //Export excel
-        Exporter ex=new Exporter(listSredniCzasOczekiwania);
-
-
-
-
+        Exporter ex=new Exporter(listSredniCzasOczekiwania,rozpoczeciaOblugi,rozpoczeciaPrzerwy,updateKasaList,updateKlientList,wejsciaDoKolejki, zadaniaUruchomieniaKasy, zakoczeniaPrzerwy,zakonczeniaObslugiKliena);
     }
     public static void main(String[] args) {
         new StatystykaFederate().runFederate();
