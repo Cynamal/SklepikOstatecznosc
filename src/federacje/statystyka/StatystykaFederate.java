@@ -13,6 +13,7 @@ import objects.Kasa;
 import objects.Klient;
 import statistic.Colections.*;
 
+import statistic.ExcelExporter.Exporter;
 import statistic.Obj.*;
 
 import java.util.ArrayList;
@@ -202,6 +203,12 @@ public class StatystykaFederate extends FederateAbstract {
             e.printStackTrace();
         }
       //  PotwierdzenieWyjscia();
+        //Export excel
+        Exporter ex=new Exporter(listSredniCzasOczekiwania);
+
+
+
+
     }
     public static void main(String[] args) {
         new StatystykaFederate().runFederate();
