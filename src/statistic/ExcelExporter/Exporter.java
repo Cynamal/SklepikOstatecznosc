@@ -6,6 +6,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import statistic.Colections.*;
+import statistic.Obj.*;
 
 import javax.swing.*;
 import java.io.FileOutputStream;
@@ -232,6 +233,19 @@ public class Exporter {
 
         rownum= createHedders(rownum,sheet ,hedders);
         rownum= wejsciaDoKolejki.ExportData(rownum,sheet,styles);
+        int ileKas=0;
+        for (EvWejscieDoKolejki ex:wejsciaDoKolejki
+                ) {
+            if(ileKas<ex.getWejscieDoKolejki().NumerKasy)ileKas=ex.getWejscieDoKolejki().NumerKasy;
+        }
+        if(ileKas>0)
+        {
+            LinkedList<Formulas> formulas=new LinkedList<>();
+            formulas=CountIFFormula("b3","b"+(rownum),"Kasa",formulas,ileKas);
+
+
+            int ile= CreateStatisticvar(sheet,styles,"b3","b"+(rownum),1,6,formulas);
+        }
     }
 
 
@@ -250,6 +264,19 @@ public class Exporter {
         hedders.add("uprzywilejowany");
         rownum= createHedders(rownum,sheet ,hedders);
         rownum= updateKlientList.ExportData(rownum,sheet,styles);
+        int ileKas=0;
+        for (UpdateKlient ex:updateKlientList
+                ) {
+            if(ileKas<ex.getKlient().IDKlienta)ileKas=ex.getKlient().IDKlienta;
+        }
+        if(ileKas>0)
+        {
+            LinkedList<Formulas> formulas=new LinkedList<>();
+            formulas=CountIFFormula("b3","b"+(rownum),"Klient",formulas,ileKas);
+
+
+            int ile= CreateStatisticvar(sheet,styles,"b3","b"+(rownum),1,6,formulas);
+        }
     }
     private void exportKasaUpdate()
     {
@@ -266,6 +293,19 @@ public class Exporter {
 
         rownum= createHedders(rownum,sheet ,hedders);
         rownum= updateKasaList.ExportData(rownum,sheet,styles);
+        int ileKas=0;
+        for (UpdateKasa ex:updateKasaList
+                ) {
+            if(ileKas<ex.getKasa().NumerKasy)ileKas=ex.getKasa().NumerKasy;
+        }
+        if(ileKas>0)
+        {
+            LinkedList<Formulas> formulas=new LinkedList<>();
+            formulas=CountIFFormula("b3","b"+(rownum),"Kasa",formulas,ileKas);
+
+
+            int ile= CreateStatisticvar(sheet,styles,"b3","b"+(rownum),1,6,formulas);
+        }
     }
 
     private void exportRozpoczeciaOblugi()
@@ -281,8 +321,32 @@ public class Exporter {
 
         rownum= createHedders(rownum,sheet ,hedders);
         rownum= rozpoczeciaOblugi.ExportData(rownum,sheet,styles);
+        int ileKas=0;
+        for (EvRozpoczecieObslugi ex:rozpoczeciaOblugi
+             ) {
+            if(ileKas<ex.getRozpoczecieObslugi().NumerKasy)ileKas=ex.getRozpoczecieObslugi().NumerKasy;
+        }
+        if(ileKas>0)
+        {
+            LinkedList<Formulas> formulas=new LinkedList<>();
+            formulas=CountIFFormula("b3","b"+(rownum),"Kasa",formulas,ileKas);
+
+
+            int ile= CreateStatisticvar(sheet,styles,"b3","b"+(rownum),1,5,formulas);
+        }
+
+
     }
+
     RozpoczeciaPrzerwy rozpoczeciaPrzerwy;
+    LinkedList<Formulas> CountIFFormula(String StartRow,String EndRow,String co,LinkedList<Formulas> formulas,int ileKas)
+    {
+        for (int ii=0;ii<ileKas;ii++)
+        {
+            formulas.add(new Formulas("COUNTIF("+StartRow+":"+EndRow+","+ii+")", co+":"+ii+" ile zadan"));
+        }
+        return formulas;
+    }
     private void exportRozpoczeciaPrzerwy()
     {
         Sheet sheet = wb.createSheet("RozpoczeciaPrzerwy");
@@ -295,6 +359,19 @@ public class Exporter {
 
         rownum= createHedders(rownum,sheet ,hedders);
         rownum= rozpoczeciaPrzerwy.ExportData(rownum,sheet,styles);
+        int ileKas=0;
+        for (EvRozpocznijPrzerwe ex:rozpoczeciaPrzerwy
+                ) {
+            if(ileKas<ex.getRozpocznijPrzerwe().NumerKasy)ileKas=ex.getRozpocznijPrzerwe().NumerKasy;
+        }
+        if(ileKas>0)
+        {
+            LinkedList<Formulas> formulas=new LinkedList<>();
+            formulas=CountIFFormula("b3","b"+(rownum),"Kasa",formulas,ileKas);
+
+
+            int ile= CreateStatisticvar(sheet,styles,"b3","b"+(rownum),1,5,formulas);
+        }
     }
     private void exportSredniCzasOczekiwania()
     {
@@ -408,7 +485,36 @@ public class Exporter {
         return Created;
 
     }
+    private int CreateStatisticvar(Sheet sheet,Map<String, CellStyle> styles,String startcell,String endcell,int startRow,int startColumn,LinkedList<Formulas> formulas)
+    {
+        int place=startColumn;
+        int Created=0;
+        Row headerRowt;
+        Row Row;
 
+        int LastRow=sheet.getLastRowNum();
+        headerRowt= sheet.getRow(startRow);
+        Row= sheet.getRow(startRow+1);
+        for(Formulas formula:formulas)
+        {
+
+            Cell cell = headerRowt.createCell(place);
+
+            cell.setCellStyle(styles.get("header"));
+            cell.setCellValue(formula.headerName);
+
+
+            cell = Row.createCell(place);
+            cell.setCellFormula(formula.formula);
+            cell.setCellStyle(styles.get("cell"));
+
+            place++;
+            Created++;
+        }
+
+        return Created;
+
+    }
 
 
     private int createHedders(int rownum,Sheet sheet ,LinkedList<String > hedders)
