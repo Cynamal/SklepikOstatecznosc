@@ -209,12 +209,12 @@ public class KlientFederate extends FederateAbstract {
     {
       if(czasDodaniaNowegoKlienta==fedamb.federateTime)
       {
-          int randTIMe= 5 + (int)(Math.random() * maximumTimeKlient);
+          int randTIMe= 15 + (int)(Math.random() * maximumTimeKlient);
           czasDodaniaNowegoKlienta+=randTIMe;
           try {
               int gotowka=100 + (int)(Math.random() * maxCash);
               int klienti=  registerKlient();
-              int czas=gotowka/10;
+              int czas=(gotowka/10)*5;
               Klient tmp=new Klient (KlientNextID++,MaszynaLosujacaUprzywilejowanych.Los(),-1,-1,gotowka,1+czas+fedamb.federateTime,klienti,fedamb.federateTime);
               kliencjiWSklepie.add(tmp);
               UpdateKlienttoRTI(klienti, tmp);
